@@ -216,6 +216,7 @@ else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/articl
  }
 
 function sign() {
+    console.log(signheaderVal)
     return new Promise((resolve, reject) => {
         const signurl = {
             url: 'https://kd.youth.cn/TaskCenter/sign',
