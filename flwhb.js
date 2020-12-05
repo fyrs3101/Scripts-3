@@ -16,7 +16,8 @@ hostname=huodong.fanli.com,
 
 时间👇
 
-0 1-16 10 5,9,10,11,12 * *
+圈x 0 1-30 12 5,9,10,11,12 * *
+服务器 1-30 12 5,9,10,11,12 * *
 
 
 
@@ -36,18 +37,7 @@ const logs = 0;   //0为关闭日志，1为开启
 const notifyInterval = 1//0为关闭通知，1为开启
 const txbz = 1.95//设置余额大于等于多少提现，必须大于0.3
 
-/*
 // 抓cookie 请放开
-
-const flwhburlKey = 'flwhburl'+jbid
-
-const flwhbheaderKey = 'flwhbhd'+jbid
-
-
-
-const flwhburlVal = $.getdata(flwhburlKey)
-
-const flwhbheaderVal = $.getdata(flwhbheaderKey)
 
 
 let isGetCookie = typeof $request !== 'undefined'
@@ -57,7 +47,6 @@ if (isGetCookie) {
 } else {
     all()
 }
-*/
 
 function GetCookie() {
     if($request &&$request.url.indexOf("ajaxInit")>=0) {
@@ -71,7 +60,6 @@ function GetCookie() {
 
     }
 }
-
 
 const flwhburl = "https://huodong.fanli.com/h5/Fanlishare20201212/ajaxInit"
 
