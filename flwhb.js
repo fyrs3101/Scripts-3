@@ -44,8 +44,6 @@ let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
     GetCookie();
     $.done();
-} else {
-    all()
 }
 
 function GetCookie() {
