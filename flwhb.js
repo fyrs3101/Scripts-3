@@ -3,7 +3,7 @@
 //返利网1212天天领现金，活动时间 12月  5号 9号到12号
 每天1.95
 
-下载地址  http://m.a8fdj.cn/Invite/promotion?id=775&spm=page_name.h5.pty-wxzcpv~std-65354&go=http%3A%2F%2Fhuodong.a8fdj.cn%2Fh5%2FInvitefriendsreward%2FregisterCallback%3Fuserid%3D373511081%26id%3D775%26sn%3D47ecab06aba43e015082e531d8214eb5
+下载地址  http://m.a8fdj.cn/Invite/promotion?id=775&spm=page_name.h5.pty-wxzcpv~std-65354&go=http%3A%2F%2Fhuodong.a8fdj.cn%2Fh5%2FInvitefriendsreward%2FregisterCallback%3Fuserid%3D387584187%26id%3D775%26sn%3D2fce85747f02a310c775fa48efdc3ddb
 
 下载后登录
 
