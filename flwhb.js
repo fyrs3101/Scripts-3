@@ -37,7 +37,18 @@ const notifyInterval = 1//0为关闭通知，1为开启
 const txbz = 1.95//设置余额大于等于多少提现，必须大于0.3
 
 /*
-抓cookie 请放开
+// 抓cookie 请放开
+
+const flwhburlKey = 'flwhburl'+jbid
+
+const flwhbheaderKey = 'flwhbhd'+jbid
+
+
+
+const flwhburlVal = $.getdata(flwhburlKey)
+
+const flwhbheaderVal = $.getdata(flwhbheaderKey)
+
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
@@ -46,6 +57,7 @@ if (isGetCookie) {
 } else {
     all()
 }
+*/
 
 function GetCookie() {
     if($request &&$request.url.indexOf("ajaxInit")>=0) {
@@ -58,7 +70,7 @@ function GetCookie() {
         $.msg(flwhbheaderKey, `获取Cookie: 成功🎉`, ``)
 
     }
-}*/
+}
 
 
 const flwhburl = "https://huodong.fanli.com/h5/Fanlishare20201212/ajaxInit"
