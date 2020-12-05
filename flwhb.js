@@ -34,23 +34,10 @@ const $ = Env(jsname)
 
 const logs = 0;   //0为关闭日志，1为开启
 const notifyInterval = 1//0为关闭通知，1为开启
-const jbid = 1;
 const txbz = 1.95//设置余额大于等于多少提现，必须大于0.3
 
-
-const flwhburlKey = 'flwhburl' + jbid
-
-const flwhbheaderKey = 'flwhbhd' + jbid
-
-const flwhburlVal = $.getdata(flwhburlKey)
-
-const flwhbheaderVal = $.getdata(flwhbheaderKey)
-
-const flwhbbodyVal = ''
-
-
-var tz = ''
-
+/*
+抓cookie 请放开
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
@@ -60,31 +47,59 @@ if (isGetCookie) {
     all()
 }
 
-
 function GetCookie() {
-    if ($request && $request.url.indexOf("ajaxInit") >= 0) {
+    if($request &&$request.url.indexOf("ajaxInit")>=0) {
         const flwhburlVal = $request.url
-        if (flwhburlVal) $.setdata(flwhburlVal, flwhburlKey)
+        if (flwhburlVal)        $.setdata(flwhburlVal,flwhburlKey)
         $.log(`[${jsname}] 获取url请求: 成功,flwhburlVal: ${flwhburlVal}`)
         const flwhbheaderVal = JSON.stringify($request.headers)
-        if (flwhbheaderVal) $.setdata(flwhbheaderVal, flwhbheaderKey)
+        if (flwhbheaderVal)        $.setdata(flwhbheaderVal,flwhbheaderKey)
         $.log(`[${jsname}] 获取Cookie: 成功,flwhbheaderVal: ${flwhbheaderVal}`)
         $.msg(flwhbheaderKey, `获取Cookie: 成功🎉`, ``)
-    }
 
-}
+    }
+}*/
+
+
+const flwhburl = "https://huodong.fanli.com/h5/Fanlishare20201212/ajaxInit"
+
+let  flwhbheader
+
+const cookiesArr =[
+    {
+        headerVal:{
+            "Accept-Encoding":"gzip, deflate, br",
+            "Cookie":"PHPSESSID=4eirrj1p61axzo6z2am3zm8859; __fl_trace_cpc=57F382BE-FB8B-4AC7-8A59-594AE336300C; __utmt=36128d-37160c-46553b-48835b-50148b-53691b-54682a-55010b-55168i-57109c-57140b-58345b-60078b-60857a-61189b-61208b-72059b-72211b-72720b-72750a-74502a-75425b-75729a-76740b-76750b-76751b-76753b-76797a-77109b-77468b-77476b-77533b-77810a-77896a; __fl_h5_fanlishare20201212_task_close_num=2; Hm_lpvt_545c20cb01a15219bfeb0d1f103f99c1=1607154144; Hm_lvt_545c20cb01a15219bfeb0d1f103f99c1=1607154144; LOGERRTIMES=0; loginverify=c9eff97f9c8b9258; prouserid=387584187; prousername=1345856915520201205969; prousernameutf=1345856915520201205969; FirstUrl=//m.fanli.com/; LandingUrl=https%3A//m.fanli.com/landingapp/privacy2%3Fgo_url%3Dhttps%253A%252F%252Fm.fanli.com%252Flandingapp%252Fchinamobile%253Fcd%253DeyJtYyI6MTcsImNoYW5uZWwiOiJpb3NBcHBsZUZhbmxpOjE3IiwiaXAiOiIyMTguODkuMjM4LjMzIiwiZGV2aWQiOjY3ODEyNTE1MzMzOTUxLCJjX3NyYyI6IjEiLCJjX3YiOiI3LjE2LjEyLjQ3In0%25253D%2526url%253Dhttps%25253A%25252F%25252Fm.fanli.com%25252Flandingapp%25252Fmobile%25253Fcd%25253DeyJtYyI6MTcsImNoYW5uZWwiOiJpb3NBcHBsZUZhbmxpOjE3IiwiaXAiOiIyMTguODkuMjM4LjMzIiwiZGV2aWQiOjY3ODEyNTE1MzMzOTUxLCJjX3NyYyI6IjEiLCJjX3YiOiI3LjE2LjEyLjQ3In0%2525253D%26spm%3Dpage_name.h5.pty-yspop%7Estd-48983%26devid%3D67812515333951%26c_aver%3D1.0%26c_src%3D1%26c_v%3D7.16.12.47%26c_nt%3Dwifi%26abtest%3D61747_d-26_d-3228_b-34_g-448_a-162_a-824_a-1154_b-348_a-254_a-44_b-6_b-2_b-4_b-16_a-72_b-46_b-12_b-6_b-36_i-2_b-34_a-a81c; __utmv=5C4DB617-1A41-49BB-BBEE-73A95E422E15; __utmo=1330365269.1888637392.3676145062; __utmp=1330365269.1888637392.1723595496",
+            "Connection":"keep-alive",
+            "Accept":"application/json, text/javascript, */*; q=0.01",
+            "Referer":"https://huodong.fanli.com/h5/Fanlishare20201212?spm=page_name.h5.pty-jljhd~id-grzx1212~77444&devid=67812515333951&c_aver=1.0&c_src=1&c_v=7.16.12.47&c_nt=wifi&abtest=61747_c-26_d-2036_b-320_a-154_b-316_b-402_b-34_g-124_b-210_c-84_b-22_b-8_a-140_b-22_a-708_b-104_a-12_a-1008_b-146_b-4_a-2_a-342_a-148_a-90_e-16_a-44_b-6_b-2_b-4_b-16_a-32_b-40_b-46_b-12_b-6_b-36_i-2_b-8_b-24_a-2_a-75c5&ci=%7B%5C%22ud%5C%22%3A%5C%22from%3Ddb%26local%3Dbrick_hp_c_bar%26id%3D1637%26id_type%3Dbar%26abtest_group%3D%26abtest_activity%3D68415_b%26dpt%3D5%252F5%5C%22%7D","Host":"huodong.fanli.com",
+            "User-Agent":"Mozilla/5.0 (iPhone; CPU iPhone OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Fanli/7.16.12.47 (ID:1-387584187-67812515333951-17-0; WVC:WK; SCR:828*1792-2.0)",
+            "f-refer":"wv_h5",
+            "Accept-Language":"zh-cn",
+            "X-Requested-With":"XMLHttpRequest"
+        }
+    }
+]
+
+var tz = ''
+let num = 0;
+all();
 
 
 function all() {
+    flwhbheader = cookiesArr[num].headerVal;
     for (var i = 0; i < 3; i++) {
         (function (i) {
             setTimeout(function () {
                 if (i == 0) flwhbtask();
                 if (i == 1) flwhblh();
-                else if (i == 2) {
-                    showmsg()
+                else if (i == 2 && num < cookiesArr.length - 1) {
+                    num += 1;
+                    all();
+                }else if (i == 2) {
                     $.done()
                 }
+                    showmsg()
             }, (i + 1) * 500);
         })(i)
     }
@@ -95,9 +110,9 @@ function all() {
 function flwhbtask() {
     return new Promise((resolve, reject) => {
         const toflwhburl = {
-            url: flwhburlVal,
-            headers: JSON.parse(flwhbheaderVal),
-            body: flwhbbodyVal
+            url: flwhburl,
+            headers: flwhbheader,
+            timeout: 60000
         };
         $.get(toflwhburl, (error, response, data) => {
             if (logs) $.log(`${jsname}, 账户信息: ${data}`)
@@ -120,9 +135,8 @@ function flwhbtask() {
 function flwhblh() {
     return new Promise((resolve, reject) => {
         const toflwhblhurl = {
-            url: flwhburlVal.replace(/ajaxInit/g, `ajaxDoTask76728`),
-            headers: JSON.parse(flwhbheaderVal),
-            body: flwhbbodyVal
+            url: flwhburl.replace(/ajaxInit/g, `ajaxDoTask76728`),
+            headers: flwhbheader,
         };
         $.get(toflwhblhurl, (error, response, data) => {
             if (logs) $.log(`${jsname}, 惊喜礼盒: ${data}`)
@@ -148,8 +162,8 @@ function zhtx(y) {
 function flwhbtx() {
     return new Promise((resolve, reject) => {
         const toflwhbtxurl = {
-            url: flwhburlVal.replace(/ajaxInit/g, `ajaxExchangeCash`),
-            headers: JSON.parse(flwhbheaderVal),
+            url: flwhburl.replace(/ajaxInit/g, `ajaxExchangeCash`),
+            headers: flwhbheader,
         };
         $.get(toflwhbtxurl, (error, response, data) => {
             if (logs) $.log(`${jsname}, 余额提现: ${data}`)
@@ -167,6 +181,7 @@ function flwhbtx() {
 function showmsg() {
     if (notifyInterval == 1)
         $.msg(jsname, '', tz)
+    tz = ''
 }
 
 
