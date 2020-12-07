@@ -17,12 +17,10 @@ jobs:
         with:
           node-version: 12.x
       - name: npm install
-        if: env.JD_COOKIE
         run: |
           cd ~/Scripts
           npm install
       - name: '运行 【秒杀红包雨】'
-        if: env.JD_COOKIE
         run: |
           cd ~/Scripts
           node Task/jd_ms_redrain.js
