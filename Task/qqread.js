@@ -132,7 +132,6 @@ function GetCookie() {
     const qqreadbodyVal = $request.body;
     if (qqreadbodyVal) $.setdata(qqreadbodyVal, "qqreadbd");
     $.log(`[${jsname}] 获取更新body: 成功,qqreadbodyVal: ${qqreadbodyVal}`);
-    $.msg(jsname, `获取更新body: 成功🎉`, ``);
   } else if ($request && $request.url.indexOf("addReadTimeWithBid?") >= 0) {
     const qqreadtimeurlVal = $request.url;
     if (qqreadtimeurlVal) $.setdata(qqreadtimeurlVal, "qqreadtimeurl");
@@ -140,7 +139,7 @@ function GetCookie() {
     const qqreadtimeheaderVal = JSON.stringify($request.headers);
     if (qqreadtimeheaderVal) $.setdata(qqreadtimeheaderVal, "qqreadtimehd");
     $.log(`[${jsname}] 获取时长header: 成功,qqreadtimeheaderVal: ${qqreadtimeheaderVal}`);
-    $.msg(jsname, `获取阅读时长cookie: 成功🎉`, ``);
+    $.msg(jsname, `获取QQ阅读数据: 成功🎉`, ``);
   }
 }
 
