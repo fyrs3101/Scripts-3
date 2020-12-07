@@ -17,7 +17,7 @@ hostname=mqqapi.reader.qq.com
 
 ############## 圈x
 
-#企鹅读书获取cookie
+#企鹅读书获取body
 https:\/\/mqqapi\.reader\.qq\.com\/log\/v4\/mqq\/track url script-request-body https://raw.githubusercontent.com/ouyangzoheng/Scripts/master/Task/qqread.js
 
 #企鹅读书获取时长cookie
@@ -136,15 +136,10 @@ function GetCookie() {
   } else if ($request && $request.url.indexOf("addReadTimeWithBid?") >= 0) {
     const qqreadtimeurlVal = $request.url;
     if (qqreadtimeurlVal) $.setdata(qqreadtimeurlVal, "qqreadtimeurl");
-    $.log(
-        `[${jsname}] 获取阅读时长url: 成功,qqreadtimeurlVal: ${qqreadtimeurlVal}`
-    );
-
+    $.log(`[${jsname}] 获取阅读时长url: 成功,qqreadtimeurlVal: ${qqreadtimeurlVal}`);
     const qqreadtimeheaderVal = JSON.stringify($request.headers);
     if (qqreadtimeheaderVal) $.setdata(qqreadtimeheaderVal, "qqreadtimehd");
-    $.log(
-        `[${jsname}] 获取时长header: 成功,qqreadtimeheaderVal: ${qqreadtimeheaderVal}`
-    );
+    $.log(`[${jsname}] 获取时长header: 成功,qqreadtimeheaderVal: ${qqreadtimeheaderVal}`);
     $.msg(jsname, `获取阅读时长cookie: 成功🎉`, ``);
   }
 }
