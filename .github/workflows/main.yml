@@ -36,7 +36,7 @@ jobs:
         if: env.YOUTH_HEADER
         run: |
           cd ~/Scripts
-          node youth.js
+          node Task/youth.js
         env:
           YOUTH_NOTIFY_CONTROL: ${{ secrets.YOUTH_NOTIFY_CONTROL }}
           PUSH_KEY: ${{ secrets.PUSH_KEY }}
