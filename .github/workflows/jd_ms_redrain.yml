@@ -33,6 +33,10 @@ jobs:
         run: |
           cd ~/Scripts
           node Task/jd_ms_redrain.js
+      - name: '运行 【京东额外奖励】'
+        run: |
+          cd ~/Scripts
+          node Task/jd_bean_home.js
         env:
           PUSH_KEY: ${{ secrets.PUSH_KEY }}
           BARK_PUSH: ${{ secrets.BARK_PUSH }}
