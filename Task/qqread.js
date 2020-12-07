@@ -18,10 +18,10 @@ hostname=mqqapi.reader.qq.com
 ############## 圈x
 
 #企鹅读书获取body
-https:\/\/mqqapi\.reader\.qq\.com\/log\/v4\/mqq\/track url script-request-body https://raw.githubusercontent.com/ouyangzoheng/Scripts/master/Task/qqread.js
+https:\/\/mqqapi\.reader\.qq\.com\/log\/v4\/mqq\/track url script-request-body https://raw.githubusercontent.com/muxu-i/Scripts/master/Task/qqread.js
 
 #企鹅读书获取时长cookie
-https:\/\/mqqapi\.reader\.qq\.com\/mqq\/addReadTimeWithBid? url script-request-header https://raw.githubusercontent.com/ouyangzoheng/Scripts/master/Task/qqread.js
+https:\/\/mqqapi\.reader\.qq\.com\/mqq\/addReadTimeWithBid? url script-request-header https://raw.githubusercontent.com/muxu-i/Scripts/master/Task/qqread.js
 
 
 */

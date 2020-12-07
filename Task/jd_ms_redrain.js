@@ -8,7 +8,7 @@
 ============Quantumultx===============
 [task_local]
 #秒杀红包雨
-10 7 * * * https://raw.githubusercontent.com/ouyangzoheng/Scripts/master/Task/jd_ms_redrain.js, tag=秒杀红包雨, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true
+10 7 * * * https://raw.githubusercontent.com/muxu-i/Scripts/master/Task/jd_ms_redrain.js, tag=秒杀红包雨, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_redPacket.png, enabled=true
 
 */
 const $ = new Env('秒杀红包雨');

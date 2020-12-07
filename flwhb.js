@@ -24,7 +24,7 @@ hostname=huodong.fanli.com,
 #返利网红包
 ############## 圈x
 
-https:\/\/huodong\.fanli\.com\/h5\/Fanlishare20201212\/ajaxInit url script-request-header https://raw.githubusercontent.com/ouyangzoheng/Scripts/master/flwhb.js
+https:\/\/huodong\.fanli\.com\/h5\/Fanlishare20201212\/ajaxInit url script-request-header https://raw.githubusercontent.com/muxu-i/Scripts/master/flwhb.js
 
 
 */
