@@ -24,7 +24,7 @@ https:\/\/mqqapi\.reader\.qq\.com\/mqq\/addReadTimeWithBid? url script-request-h
 
 const jsname = "企鹅读书";
 const $ = Env(jsname);
-const notify = $.isNode() ? require("./sendNotify") : "";
+const notify = $.isNode() ? require("../sendNotify") : "";
 
 let tz = "";
 let kz = "";
