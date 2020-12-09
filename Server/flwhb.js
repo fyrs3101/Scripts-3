@@ -1,4 +1,4 @@
-/*ziye
+/*
 
 //返利网1212天天领现金，活动时间 12月  5号 9号到12号
 每天1.95
@@ -7,57 +7,16 @@
 
 下载后登录
 
-进入 我的 点击  天天领现金 获取cookie
-
-⚠️会卡住，但是能获取到cookie，然后注释重写就行了！
-提现请先微信关注返利网公众号
-
-hostname=huodong.fanli.com,
-
-时间👇
-
-圈x 0 1-30 12 5,9,10,11,12 * *
-服务器 1-30 12 5,9,10,11,12 * *
-
-
-
-#返利网红包
-############## 圈x
-
-https:\/\/huodong\.fanli\.com\/h5\/Fanlishare20201212\/ajaxInit url script-request-header https://raw.githubusercontent.com/muxu-i/Scripts/master/flwhb.js
-
-
 */
 
 
 const jsname = '返利网红包'
 const $ = Env(jsname)
-
+const notify = $.isNode() ? require("./sendNotify") : "";
 const logs = 0;   //0为关闭日志，1为开启
 const notifyInterval = 1//0为关闭通知，1为开启
 const txbz = 1.95//设置余额大于等于多少提现，必须大于0.3
 
-// 抓cookie 请放开
-
-
-let isGetCookie = typeof $request !== 'undefined'
-if (isGetCookie) {
-    GetCookie();
-    $.done();
-}
-
-function GetCookie() {
-    if($request &&$request.url.indexOf("ajaxInit")>=0) {
-        const flwhburlVal = $request.url
-        if (flwhburlVal)        $.setdata(flwhburlVal,flwhburlKey)
-        $.log(`[${jsname}] 获取url请求: 成功,flwhburlVal: ${flwhburlVal}`)
-        const flwhbheaderVal = JSON.stringify($request.headers)
-        if (flwhbheaderVal)        $.setdata(flwhbheaderVal,flwhbheaderKey)
-        $.log(`[${jsname}] 获取Cookie: 成功,flwhbheaderVal: ${flwhbheaderVal}`)
-        $.msg(flwhbheaderKey, `获取Cookie: 成功🎉`, ``)
-
-    }
-}
 
 const flwhburl = "https://huodong.fanli.com/h5/Fanlishare20201212/ajaxInit"
 

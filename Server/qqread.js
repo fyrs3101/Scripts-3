@@ -1,38 +1,10 @@
-/* ziye
-
-github地址     https://github.com/ziye12/JavaScript
-转载请备注个名字，谢谢
-
-11.25 增加 阅读时长上传，阅读金币，阅读随机金币
-11.25 修复翻倍宝箱不同时领取的问题.增加阅读金币判定
-11.25 修复阅读时长问题，阅读金币问题，请重新获取时长cookie
-11.26 随机金币只有一次，故去除，调整修复阅读金币问题，增加时长上传限制
-11.26 增加领取周时长奖励
-11.26 增加结束命令
-11.27 调整通知为，成功开启宝箱再通知
-11.28 修复错误
-11.29 更新 支持action.默认每天21点到21点20通知
-12.2 修复打卡问题
-12.3 缩短运行时间，由于企鹅读书版本更新.请手动进去看一次书
-12.3 调整推送时间为12点和24点左右
-12.6 精简打印通知
-12.7 解决1金币问题，务必重新获取一次更新body
-12.8 更新支持boxjs
+/*
 
 ⚠️cookie获取方法：
 
 进 https://m.q.qq.com/a/s/d3eacc70120b9a37e46bad408c0c4c2a
 
 进书库选择一本书,看10秒以下,然后退出，获取时长url和时长header以及更新body，看书一定不能超过10秒
-
-
-
-Secrets对应关系如下，多账号默认换行
-
-qqreadbodyVal         👉   QQREAD_BODY
-qqreadtimeurlVal      👉   QQREAD_TIMEURL
-qqreadtimeheaderVal   👉   QQREAD_TIMEHD
-
 
 
 ⚠️宝箱奖励为20分钟一次，自己根据情况设置定时，建议设置11分钟一次
@@ -47,28 +19,11 @@ https:\/\/mqqapi\.reader\.qq\.com\/log\/v4\/mqq\/track url script-request-body h
 #企鹅读书获取时长cookie
 https:\/\/mqqapi\.reader\.qq\.com\/mqq\/addReadTimeWithBid? url script-request-header https://raw.githubusercontent.com/ziye12/JavaScript/master/Task/qqreads.js
 
-############## loon
-
-//企鹅读书获取更新body
-http-request https:\/\/mqqapi\.reader\.qq\.com\/log\/v4\/mqq\/track script-path=https://raw.githubusercontent.com/ziye12/JavaScript/master/Task/qqreads.js,requires-body=true, tag=企鹅读书获取更新body
-
-//企鹅读书获取时长cookie
-http-request https:\/\/mqqapi\.reader\.qq\.com\/mqq\/addReadTimeWithBid? script-path=https://raw.githubusercontent.com/ziye12/JavaScript/master/Task/qqreads.js, requires-header=true, tag=企鹅读书获取时长cookie
-
-############## surge
-
-//企鹅读书获取更新body
-企鹅读书获取更新body = type=http-request,pattern=https:\/\/mqqapi\.reader\.qq\.com\/log\/v4\/mqq\/track,script-path=https://raw.githubusercontent.com/ziye12/JavaScript/master/Task/qqreads.js,
-
-//企鹅读书获取时长cookie
-企鹅读书获取时长cookie = type=http-request,pattern=https:\/\/mqqapi\.reader\.qq\.com\/mqq\/addReadTimeWithBid?,script-path=https://raw.githubusercontent.com/ziye12/JavaScript/master/Task/qqreads.js,
-
 
 */
 
 const jsname = "企鹅读书";
 const $ = Env(jsname);
-$.idx = ($.idx = ($.getval('qeSuffix') || '1') - 1) > 0 ? ($.idx + 1 + '') : ''; // 账号扩展字符
 const notify = $.isNode() ? require("./sendNotify") : "";
 
 let tz = "";
@@ -76,10 +31,8 @@ let kz = "";
 let task = "";
 let config = "";
 
-let COOKIES_SPLIT = "\n"; // 自定义多cookie之间连接的分隔符，默认为\n换行分割，不熟悉的不要改动和配置，为了兼容本地node执行
-
 const logs = 0; // 0为关闭日志，1为开启
-const notifyInterval = 3;
+const notifyInterval = 1;
 // 0为关闭通知，1为所有通知，2为宝箱领取成功通知，3为宝箱每15次通知一次
 
 const dd = 1; // 单次任务延迟,默认1秒
@@ -87,133 +40,54 @@ const TIME = 30; // 单次时长上传限制，默认5分钟
 const maxtime = 12; // 每日上传时长限制，默认12小时
 const wktimess = 1200; // 周奖励领取标准，默认1200分钟
 
-const qqreadbdArr = [];
+const qqreadbdArr = [
+  {
+    qqreadBD: '{"common":{"appid":1450024394,"areaid":5,"qq_ver":"8.4.17","os_ver":"iOS 14.2","mp_ver":"0.31.0","mpos_ver":"1.21.0","brand":"iPhone","model":"iPhone XR<iPhone11,8>","screenWidth":414,"screenHeight":896,"windowWidth":414,"windowHeight":813,"openid":"25F52C76425B826B704DEAFD5858E31B","guid":75070460,"session":"l6114q0vainhvwpgtogoztg6xd0mkaui","scene":1007,"source":"wza0003wzb0003","hasRedDot":"false","missions":-1,"caseID":-1},"dataList":[{"click1":"qqauthorize_addRCS_succ_C","click2":"qqauthorize_addRCS_get_C","route":"pages/money/index","refer":-1,"options":{"source":"wza0003wzb0003","shareType":"303","fromGuid":"75070460"},"dis":1607310503515,"ext6":277,"eventID":"onShow_O","type":"others","ui_pos":1,"scene":1007}]}',
+    qqreadtimeURL: 'https://mqqapi.reader.qq.com/mqq/addReadTimeWithBid?scene=1007&refer=-1&bid=29709406&readTime=2815&read_type=0&conttype=1&read_status=0&chapter_info=%5B%7B%222%22%3A%7B%22readTime%22%3A2815%2C%22pay_status%22%3A0%7D%7D%5D&sp=-1',
+    qqreadtimeHD: '{"ywsession":"l6114q0vainhvwpgtogoztg6xd0mkaui","Cookie":"ywguid=75070460;ywkey=ywNOwbe5BWC3;platform=ios;channel=mqqmina;mpVersion=0.31.0;qq_ver=8.4.17;os_ver=iOS 14.2;mpos_ver=1.21.0;platform=ios;openid=25F52C76425B826B704DEAFD5858E31B","Connection":"keep-alive","Content-Type":"application/json","Accept":"*/*","Host":"mqqapi.reader.qq.com","User-Agent":"QQ/8.4.17.638 CFNetwork/1206 Darwin/20.1.0","Referer":"https://appservice.qq.com/1110657249/0.31.0/page-frame.html","Accept-Language":"zh-cn","Accept-Encoding":"gzip, deflate, br","mpversion":"0.31.0"}'
+  },
+  {
+    qqreadBD: '{"common":{"appid":1450024394,"areaid":5,"qq_ver":"8.4.17","os_ver":"iOS 14.2","mp_ver":"0.31.0","mpos_ver":"1.21.0","brand":"iPhone","model":"iPhone XR<iPhone11,8>","screenWidth":414,"screenHeight":896,"windowWidth":414,"windowHeight":813,"openid":"7C24464B6CBDFD87D6A301D18E9167A7","guid":228204571,"session":"ioktesuqjw1c2x96xorljeuaueskjr8i","scene":1007,"source":"wza0007wzb0002","hasRedDot":"false","missions":-1,"caseID":-1},"dataList":[{"click1":"homeTab_click_C","click2":"qqauthorize_addRCS_succ_C","route":"pages/my-self/index","refer":-1,"options":{},"dis":1607310909611,"ext6":53,"eventID":"onShow_O","type":"others","ui_pos":1,"scene":1007}]}',
+    qqreadtimeURL: 'https://mqqapi.reader.qq.com/mqq/addReadTimeWithBid?scene=1007&refer=-1&bid=29709406&readTime=2815&read_type=0&conttype=1&read_status=0&chapter_info=%5B%7B%222%22%3A%7B%22readTime%22%3A2815%2C%22pay_status%22%3A0%7D%7D%5D&sp=-1',
+    qqreadtimeHD: '{"ywsession":"9a2k0mkj9ih153lbgsahnpk7x5dxkvxd","Cookie":"ywguid=228204571;ywkey=ywx2QsrKWMMj;platform=ios;channel=mqqmina;mpVersion=0.31.0;qq_ver=8.4.17;os_ver=iOS 14.2;mpos_ver=1.21.0;platform=ios;openid=7C24464B6CBDFD87D6A301D18E9167A7","Connection":"keep-alive","Content-Type":"application/json","Accept":"*/*","Host":"mqqapi.reader.qq.com","User-Agent":"QQ/8.4.17.638 CFNetwork/1206 Darwin/20.1.0","Referer":"https://appservice.qq.com/1110657249/0.31.0/page-frame.html","Accept-Language":"zh-cn","Accept-Encoding":"gzip, deflate, br","mpversion":"0.31.0"}'
+  },
+  {
+    qqreadBD: '{"common":{"appid":1450024394,"areaid":5,"qq_ver":"8.4.17","os_ver":"iOS 14.2","mp_ver":"0.31.0","mpos_ver":"1.21.0","brand":"iPhone","model":"iPhone XR<iPhone11,8>","screenWidth":414,"screenHeight":896,"windowWidth":414,"windowHeight":813,"openid":"2710377682D80412DBAA9791AC46B847","guid":946461602,"session":"h1sh7qz2211plvpwmlujg3ygmr7ys28f","scene":1132,"source":"wza0007wzb0005","hasRedDot":"false","missions":-1,"caseID":-1},"dataList":[{"click1":-1,"click2":-1,"route":"pages/index/index","refer":-1,"options":{},"dis":1607312355054,"ext6":0,"eventID":"onLuanch_O","type":"others","ui_pos":-1,"scene":1132}]}',
+    qqreadtimeURL: 'https://mqqapi.reader.qq.com/mqq/addReadTimeWithBid?scene=1007&refer=-1&bid=29709406&readTime=2815&read_type=0&conttype=1&read_status=0&chapter_info=%5B%7B%222%22%3A%7B%22readTime%22%3A2815%2C%22pay_status%22%3A0%7D%7D%5D&sp=-1',
+    qqreadtimeHD: '{"ywsession":"h1sh7qz2211plvpwmlujg3ygmr7ys28f","Cookie":"ywguid=946461602;ywkey=ywDtUp25O0BM;platform=ios;channel=mqqmina;mpVersion=0.31.0;qq_ver=8.4.17;os_ver=iOS 14.2;mpos_ver=1.21.0;platform=ios;openid=2710377682D80412DBAA9791AC46B847","Connection":"keep-alive","Content-Type":"application/json","Accept":"*/*","Host":"mqqapi.reader.qq.com","User-Agent":"QQ/8.4.17.638 CFNetwork/1206 Darwin/20.1.0","Referer":"https://appservice.qq.com/1110657249/0.31.0/page-frame.html","Accept-Language":"zh-cn","Accept-Encoding":"gzip, deflate, br","mpversion":"0.31.0"}'
+  },
+  {
+    qqreadBD: '{"common":{"appid":1450024394,"areaid":5,"qq_ver":"8.4.17","os_ver":"iOS 14.2","mp_ver":"0.31.0","mpos_ver":"1.21.0","brand":"iPhone","model":"iPhone XR<iPhone11,8>","screenWidth":414,"screenHeight":896,"windowWidth":414,"windowHeight":813,"openid":"7098A4B55F0A5D7C0AC4597E12029091","guid":1056639532,"session":"5063dnuomqvtv4xzmd9en4ywe9pam0t4","scene":1007,"source":"wza0003wzb0003","hasRedDot":"false","missions":-1,"caseID":-1},"dataList":[{"click1":"homeTab_click_C","click2":"push_limitYes_suc_C","route":"pages/my-self/index","refer":-1,"options":{},"dis":1607311092599,"ext6":17,"eventID":"onHide_O","type":"others","ui_pos":2}]}',
+    qqreadtimeURL: 'https://mqqapi.reader.qq.com/mqq/addReadTimeWithBid?scene=1007&refer=-1&bid=29709406&readTime=2815&read_type=0&conttype=1&read_status=0&chapter_info=%5B%7B%222%22%3A%7B%22readTime%22%3A2815%2C%22pay_status%22%3A0%7D%7D%5D&sp=-1',
+    qqreadtimeHD: '{"ywsession":"nmxad73l52lidv4yjju5zgnvuqg434i0","Cookie":"ywguid=1056639532;ywkey=yw5NN8pPabFd;platform=ios;channel=mqqmina;mpVersion=0.31.0;qq_ver=8.4.17;os_ver=iOS 14.2;mpos_ver=1.21.0;platform=ios;openid=7098A4B55F0A5D7C0AC4597E12029091","Connection":"keep-alive","Content-Type":"application/json","Accept":"*/*","Host":"mqqapi.reader.qq.com","User-Agent":"QQ/8.4.17.638 CFNetwork/1206 Darwin/20.1.0","Referer":"https://appservice.qq.com/1110657249/0.31.0/page-frame.html","Accept-Language":"zh-cn","Accept-Encoding":"gzip, deflate, br","mpversion":"0.31.0"}'
+  },
+  {
+    qqreadBD: '{"common":{"appid":1450024394,"areaid":5,"qq_ver":"8.4.17","os_ver":"iOS 14.2","mp_ver":"0.31.0","mpos_ver":"1.21.0","brand":"iPhone","model":"iPhone XR<iPhone11,8>","screenWidth":414,"screenHeight":896,"windowWidth":414,"windowHeight":813,"openid":"6B7586447C4EF6C50E929DEA75929B52","guid":2905184006,"session":"kx7417zfgc0a5b0klrfihapm25s3bdjj","scene":1007,"source":"wza0003wzb0003","hasRedDot":"false","missions":-1,"caseID":-1},"dataList":[{"click1":"homeTab_click_C","click2":"push_limitYes_suc_C","route":"pages/book-shelf/index","refer":-1,"options":{},"dis":1607311820592,"ext6":19,"eventID":"bookShelf_myshelf_myBook_C","type":"click","bid":29709406,"bookStatus":0,"bookPay":0,"ui_pos":0}]}',
+    qqreadtimeURL: 'https://mqqapi.reader.qq.com/mqq/addReadTimeWithBid?scene=1007&refer=-1&bid=29709406&readTime=2815&read_type=0&conttype=1&read_status=0&chapter_info=%5B%7B%222%22%3A%7B%22readTime%22%3A2815%2C%22pay_status%22%3A0%7D%7D%5D&sp=-1',
+    qqreadtimeHD: '{"ywsession":"kx7417zfgc0a5b0klrfihapm25s3bdjj","Cookie":"ywguid=2905184006;ywkey=yw15wOzpTZb7;platform=ios;channel=mqqmina;mpVersion=0.31.0;qq_ver=8.4.17;os_ver=iOS 14.2;mpos_ver=1.21.0;platform=ios;openid=6B7586447C4EF6C50E929DEA75929B52","Connection":"keep-alive","Content-Type":"application/json","Accept":"*/*","Host":"mqqapi.reader.qq.com","User-Agent":"QQ/8.4.17.638 CFNetwork/1206 Darwin/20.1.0","Referer":"https://appservice.qq.com/1110657249/0.31.0/page-frame.html","Accept-Language":"zh-cn","Accept-Encoding":"gzip, deflate, br","mpversion":"0.31.0"}'
+  },
+  {
+    qqreadBD: '{"common":{"appid":1450024394,"areaid":5,"qq_ver":"8.4.17","os_ver":"iOS 14.2","mp_ver":"0.31.0","mpos_ver":"1.21.0","brand":"iPhone","model":"iPhone XR<iPhone11,8>","screenWidth":414,"screenHeight":896,"windowWidth":414,"windowHeight":813,"openid":"CDE7080E626FAEBF5027A5CAD2DF8D49","guid":3020606737,"session":"igzudbtci0vkf9gwp6k20bcclxffze08","scene":1007,"source":"wza0001wzb0005","hasRedDot":"false","missions":-1,"caseID":-1},"dataList":[{"click1":-1,"click2":-1,"route":"pages/money/index","refer":-1,"options":{"fromGuid":"75070460","shareType":"303","source":"wza0001wzb0005"},"dis":1607312153447,"ext6":1,"eventID":"onShow_O","type":"others","ui_pos":1,"scene":1007}]}',
+    qqreadtimeURL: 'https://mqqapi.reader.qq.com/mqq/addReadTimeWithBid?scene=1007&refer=-1&bid=29709406&readTime=2815&read_type=0&conttype=1&read_status=0&chapter_info=%5B%7B%222%22%3A%7B%22readTime%22%3A2815%2C%22pay_status%22%3A0%7D%7D%5D&sp=-1',
+    qqreadtimeHD: '{"ywsession":"0u9o8ty0g2rur34389e23wi5mel90zce","Cookie":"ywguid=3020606737;ywkey=ywe7gO89nPhO;platform=ios;channel=mqqmina;mpVersion=0.31.0;qq_ver=8.4.17;os_ver=iOS 14.2;mpos_ver=1.21.0;platform=ios;openid=CDE7080E626FAEBF5027A5CAD2DF8D49","Connection":"keep-alive","Content-Type":"application/json","Accept":"*/*","Host":"mqqapi.reader.qq.com","User-Agent":"QQ/8.4.17.638 CFNetwork/1206 Darwin/20.1.0","Referer":"https://appservice.qq.com/1110657249/0.31.0/page-frame.html","Accept-Language":"zh-cn","Accept-Encoding":"gzip, deflate, br","mpversion":"0.31.0"}'
+  },
+  {
+    qqreadBD: '{"common":{"appid":1450024394,"areaid":5,"qq_ver":"8.4.17","os_ver":"iOS 14.2","mp_ver":"0.31.0","mpos_ver":"1.21.0","brand":"iPhone","model":"iPhone XR<iPhone11,8>","screenWidth":414,"screenHeight":896,"windowWidth":414,"windowHeight":813,"openid":"F7E2911D26C1B4AE62F72FA40098FB25","guid":702691584,"session":"ckcs1xvogss7mqw733b4qkcsmydb0q7y","scene":1007,"source":"wza0001wzb0005","hasRedDot":"false","missions":-1,"caseID":-1},"dataList":[{"click1":"homeTab_click_C","click2":"bookStore_newCl_nextPage_C","route":"pages/book-read/index","refer":"pages/index/index","options":{"bid":"29709406"},"dis":1607312218968,"ext6":15,"eventID":"topBar_left_home_C","type":"click","ui_pos":1}]}',
+    qqreadtimeURL: 'https://mqqapi.reader.qq.com/mqq/addReadTimeWithBid?scene=1007&refer=-1&bid=29709406&readTime=2815&read_type=0&conttype=1&read_status=0&chapter_info=%5B%7B%222%22%3A%7B%22readTime%22%3A2815%2C%22pay_status%22%3A0%7D%7D%5D&sp=-1',
+    qqreadtimeHD: '{"ywsession":"4bnk4emdqj24bebrhh395hou2ovgi0j2","Cookie":"ywguid=702691584;ywkey=ywHVpp1nieHq;platform=ios;channel=mqqmina;mpVersion=0.31.0;qq_ver=8.4.17;os_ver=iOS 14.2;mpos_ver=1.21.0;platform=ios;openid=F7E2911D26C1B4AE62F72FA40098FB25","Connection":"keep-alive","Content-Type":"application/json","Accept":"*/*","Host":"mqqapi.reader.qq.com","User-Agent":"QQ/8.4.17.638 CFNetwork/1206 Darwin/20.1.0","Referer":"https://appservice.qq.com/1110657249/0.31.0/page-frame.html","Accept-Language":"zh-cn","Accept-Encoding":"gzip, deflate, br","mpversion":"0.31.0"}'
+  }
+];
 let qqreadbodyVal = "";
-const qqreadtimeurlArr = [];
 let qqreadtimeurlVal = "";
-const qqreadtimehdArr = [];
 let qqreadtimeheaderVal = "";
-let qqreadBD = [];
-let qqreadtimeURL = [];
-let qqreadtimeHD = [];
-if ($.isNode()) {
-  if (process.env.COOKIES_SPLIT) {
-    COOKIES_SPLIT = process.env.COOKIES_SPLIT;
-  }
-  console.log(
-      `============ cookies分隔符为：${JSON.stringify(
-          COOKIES_SPLIT
-      )} =============\n`
-  );
-  if (
-      process.env.QQREAD_BODY &&
-      process.env.QQREAD_BODY.indexOf(COOKIES_SPLIT) > -1
-  ) {
-    qqreadBD = process.env.QQREAD_BODY.split(COOKIES_SPLIT);
-  } else {
-    qqreadBD = process.env.QQREAD_BODY.split();
-  }
-
-  if (
-      process.env.QQREAD_TIMEURL &&
-      process.env.QQREAD_TIMEURL.indexOf(COOKIES_SPLIT) > -1
-  ) {
-    qqreadtimeURL = process.env.QQREAD_TIMEURL.split(COOKIES_SPLIT);
-  } else {
-    qqreadtimeURL = process.env.QQREAD_TIMEURL.split();
-  }
-
-  if (
-      process.env.QQREAD_TIMEHD &&
-      process.env.QQREAD_TIMEHD.indexOf(COOKIES_SPLIT) > -1
-  ) {
-    qqreadtimeHD = process.env.QQREAD_TIMEHD.split(COOKIES_SPLIT);
-  } else {
-    qqreadtimeHD = process.env.QQREAD_TIMEHD.split();
-  }
-}
-
-if ($.isNode()) {
-  Object.keys(qqreadBD).forEach((item) => {
-    if (qqreadBD[item]) {
-      qqreadbdArr.push(qqreadBD[item]);
-    }
-  });
-  Object.keys(qqreadtimeURL).forEach((item) => {
-    if (qqreadtimeURL[item]) {
-      qqreadtimeurlArr.push(qqreadtimeURL[item]);
-    }
-  });
-  Object.keys(qqreadtimeHD).forEach((item) => {
-    if (qqreadtimeHD[item]) {
-      qqreadtimehdArr.push(qqreadtimeHD[item]);
-    }
-  });
-
-  console.log(
-      `============ 共${qqreadtimehdArr.length}个企鹅读书账号  =============\n`
-  );
-  console.log(
-      `============ 脚本执行-北京时间(UTC+8)：${new Date(
-          new Date().getTime() + 8 * 60 * 60 * 1000
-      ).toLocaleString()}  =============\n`
-  );
-} else {
-  qqreadbdArr.push($.getdata("qqreadbd"));
-  qqreadtimeurlArr.push($.getdata("qqreadtimeurl"));
-  qqreadtimehdArr.push($.getdata("qqreadtimehd"));
-  // 根据boxjs中设置的额外账号数，添加存在的账号数据进行任务处理
-  let qeCount = ($.getval('qeCount') || '1') - 0;
-  for (let i = 2; i <= qeCount; i++) {
-    if ($.getdata(`qqreadbd${i}`)) {
-      qqreadbdArr.push($.getdata(`qqreadbd${i}`));
-      qqreadtimeurlArr.push($.getdata(`qqreadtimeurl${i}`));
-      qqreadtimehdArr.push($.getdata(`qqreadtimehd${i}`));
-    }
-  }
-}
-
-if ((isGetCookie = typeof $request !== "undefined")) {
-  GetCookie();
-  $.done();
-}
-
-function GetCookie() {
-
-  if ($request && $request.url.indexOf("addReadTimeWithBid?") >= 0) {
-    const qqreadtimeurlVal = $request.url;
-    if (qqreadtimeurlVal) $.setdata(qqreadtimeurlVal, "qqreadtimeurl" + $.idx);
-    $.log(
-        `[${jsname + $.idx}] 获取时长url: 成功,qqreadtimeurlVal: ${qqreadtimeurlVal}`
-    );
-    $.msg(jsname + $.idx, `获取时长url: 成功🎉`, ``);
-    const qqreadtimeheaderVal = JSON.stringify($request.headers);
-    if (qqreadtimeheaderVal) $.setdata(qqreadtimeheaderVal, "qqreadtimehd" + $.idx);
-    $.log(
-        `[${jsname + $.idx}] 获取时长header: 成功,qqreadtimeheaderVal: ${qqreadtimeheaderVal}`
-    );
-    $.msg(jsname + $.idx, `获取时长header: 成功🎉`, ``);
-  }
-  else if ($request &&$request.body.indexOf("bookDetail_bottomBar_read_C")>=0&&$request.body.indexOf("bookRead_show_I")>=0&&$request.body.indexOf("topBar_left_back_C")<0&&$request.body.indexOf("bookRead_dropOut_shelfYes_C")<0){
-    const qqreadbodyVal = $request.body;
-    if (qqreadbodyVal) $.setdata(qqreadbodyVal, "qqreadbd" + $.idx);
-    $.log(
-        `[${jsname + $.idx}] 获取更新body: 成功,qqreadbodyVal: ${qqreadbodyVal}`
-    );
-    $.msg(jsname + $.idx, `获取更新body: 成功🎉`, ``);
-
-  }
-
-}
-
 
 
 let K = 0;
 all();
 function all() {
-  qqreadbodyVal = qqreadbdArr[K];
-  qqreadtimeurlVal = qqreadtimeurlArr[K];
-  qqreadtimeheaderVal = qqreadtimehdArr[K];
+  qqreadbodyVal = qqreadbdArr[K].qqreadBD;
+  qqreadtimeurlVal = qqreadbdArr[K].qqreadtimeURL;
+  qqreadtimeheaderVal = qqreadbdArr[K].qqreadtimeHD;
   for (let i = 0; i < 15; i++) {
     (function (i) {
       setTimeout(
@@ -674,7 +548,7 @@ function showmsg() {
       (d.getHours() == 12 && d.getMinutes() <= 20) ||
       (d.getHours() == 23 && d.getMinutes() >= 40)
   ) {
-    notify.sendNotify(jsname, kz);
+    // notify.sendNotify(jsname, kz);
   }
 
   if (notifyInterval != 1) console.log(tz); // 无通知时，打印通知
@@ -696,6 +570,7 @@ function showmsg() {
       task.data.treasureBox.count == 60
   )
     $.msg(jsname, "", tz); // 宝箱每15次通知一次
+    tz = ''
 }
 
 
