@@ -43,7 +43,7 @@ const CookieWA = '';
 let CookiePJ = '';
 if ($.isNode()) {
     if (process.env.PJ_COOKIE) {
-        CookiePJ = process.env.PJ_COOKIE
+        CookiePJ = JSON.stringify(process.env.PJ_COOKIE)
     }
 } else {
     CookiePJ = CookieWA || $.getdata("CookieWA");
