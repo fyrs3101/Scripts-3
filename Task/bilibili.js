@@ -18,7 +18,7 @@ if ($.isNode()) {
 }
 
 let headers = {
-    'Cookie': JSON.stringify(CookieBili),
+    'Cookie': CookieBili,
     'Host': 'api.live.bilibili.com',
     'Origin': 'api.live.bilibili.com',
     'Referer': 'http://live.bilibili.com/',
@@ -33,6 +33,7 @@ function sign() {
         url: `https://api.live.bilibili.com/sign/doSign`,
         headers: headers
     }
+    $.log(JSON.stringify(CookieBili));
     $.log(JSON.stringify(url));
     $.get(url, (error, response, data) => {
         let result = JSON.parse(data)
