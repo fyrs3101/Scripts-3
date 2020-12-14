@@ -6,7 +6,7 @@ name: 吾爱破解
 on:
   workflow_dispatch:
   schedule:
-     - cron: '0 9 * * *'
+     - cron: '0 10,20 * * *'
   watch:
     types: started
 
