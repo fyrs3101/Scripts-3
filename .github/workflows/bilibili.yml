@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
     env:
-        PJ_COOKIE: ${{ secrets.BILI_COOKIE }}
+        BILI_COOKIE: ${{ secrets.BILI_COOKIE }}
     steps:
       - name: Checkout
         run: |
