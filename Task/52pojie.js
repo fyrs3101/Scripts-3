@@ -67,6 +67,7 @@ function checkin() {
                 $.msg("吾爱破解", "", "服务器暂停签到 ⚠️")
             } else {
                 $.msg("吾爱破解", "", "脚本待更新 ‼️‼️")
+                $.log(data);
             }
         }
         $.done();
