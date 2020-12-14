@@ -12,13 +12,13 @@ const notify = $.isNode() ? require('../sendNotify') : '';
 const cookieName = 'bilibili'
 let CookieBili
 if ($.isNode()) {
-    if (process.env.PJ_COOKIE) {
+    if (process.env.BILI_COOKIE) {
         CookieBili = process.env.BILI_COOKIE
     }
 }
 
 let headers = {
-    'Cookie': CookieBili,
+    'Cookie': JSON.stringify(CookieBili),
     'Host': 'api.live.bilibili.com',
     'Origin': 'api.live.bilibili.com',
     'Referer': 'http://live.bilibili.com/',
@@ -33,8 +33,6 @@ function sign() {
         url: `https://api.live.bilibili.com/sign/doSign`,
         headers: headers
     }
-    $.log(JSON.stringify(CookieBili));
-    $.log(JSON.stringify(url));
     $.get(url, (error, response, data) => {
         let result = JSON.parse(data)
         let title = `${cookieName}`
@@ -62,7 +60,6 @@ function getsigninfo() {
         url: `https://api.live.bilibili.com/sign/GetSignInfo`,
         headers: headers
     }
-
     $.get(url, (error, response, data) => {
         let title = `${cookieName}`
         let subTitle = `签到结果: 成功 (重复签到)`
