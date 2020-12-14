@@ -17,7 +17,7 @@ if ($.isNode()) {
     }
 }
 
-const headers = {
+let headers = {
     'Cookie': JSON.stringify(CookieBili),
     'Host': 'api.live.bilibili.com',
     'Origin': 'api.live.bilibili.com',
