@@ -33,7 +33,7 @@ function sign() {
         url: `https://api.live.bilibili.com/sign/doSign`,
         headers: headers
     }
-    $.log(url);
+    $.log(JSON.stringify(url));
     $.get(url, (error, response, data) => {
         let result = JSON.parse(data)
         let title = `${cookieName}`
