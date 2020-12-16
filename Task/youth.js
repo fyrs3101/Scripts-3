@@ -162,7 +162,6 @@ else if ($.time('HH')>4&&$.time('HH')<8){
   .finally(() => $.done())
 
 let bodyList = []
-let index=0
 function GetCookie() {
    if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/TaskCenter\/(sign|getSign)/)) {
    const signheaderVal = JSON.stringify($request.headers)
@@ -175,9 +174,8 @@ else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/articl
     if (articlebodyVal)        $.setdata(articlebodyVal,'read_zq')
     $.log(`${$.name} 获取阅读: 成功,articlebodyVal: ${articlebodyVal}`)
     $.msg($.name, `获取阅读请求: 成功🎉`, ``)
-       bodyList.push(articlebodyVal + '\n')
-       $.log(bodyList)
-       index ++
+    bodyList.push(articlebodyVal + '\n')
+       serverNotify("body",bodyList)
   }
 else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/v5\/user\/app_stay/)) {
    const timebodyVal = $request.body
@@ -191,9 +189,6 @@ else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/articl
     $.log(`${$.name} 获取惊喜红包: 成功,redpbodyVal: ${redpbodyVal}`)
     $.msg($.name, `获取惊喜红包请求: 成功🎉`, ``)
   }
-    if (index == 1){
-        serverNotify("body",bodyList)
-    }
  }
 
 
