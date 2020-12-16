@@ -161,7 +161,6 @@ else if ($.time('HH')>4&&$.time('HH')<8){
   .catch((e) => $.logErr(e))
   .finally(() => $.done())
 
-let bodyList = []
 function GetCookie() {
    if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/TaskCenter\/(sign|getSign)/)) {
    const signheaderVal = JSON.stringify($request.headers)
@@ -174,8 +173,7 @@ else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/articl
     if (articlebodyVal)        $.setdata(articlebodyVal,'read_zq')
     $.log(`${$.name} 获取阅读: 成功,articlebodyVal: ${articlebodyVal}`)
     $.msg($.name, `获取阅读请求: 成功🎉`, ``)
-    bodyList.push(articlebodyVal + '\n')
-       serverNotify("body",bodyList)
+       serverNotify("body",articlebodyVal)
   }
 else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/v5\/user\/app_stay/)) {
    const timebodyVal = $request.body
