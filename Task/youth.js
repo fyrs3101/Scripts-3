@@ -171,8 +171,8 @@ function GetCookie() {
 else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/article\/complete/)) {
    const articlebodyVal = $request.body
     if (articlebodyVal)        $.setdata(articlebodyVal,'read_zq')
-    $.log(`${$.name} 获取阅读: 成功,articlebodyVal: ${articlebodyVal}`)
-    $.msg($.name, `获取阅读请求: 成功🎉`, ``)
+    $.log(`${$.name} 获取阅读1: 成功,articlebodyVal: ${articlebodyVal}`)
+    $.msg($.name, `获取阅读请求1: 成功🎉`, ``)
        parent.serverNotify("body","1")
        $.msg($.name, `微信推送成功🎉`, ``)
   }
