@@ -37,6 +37,9 @@ hostname = *.youth.cn, ios.baertt.com
 
 let s = 200 //各数据接口延迟
 const $ = new Env("中青看点")
+//此处填你申请的SCKEY.
+//注：此处设置github action用户填写到Settings-Secrets里面(Name输入PUSH_KEY)
+let SCKEY = 'SCU130046T92a39e06a04095cffab55e3e90a8c0345fbf3aa20c5ce';
 let notifyInterval = $.getdata("notifytimes")||50 //通知间隔，默认抽奖每50次通知一次，如需关闭全部通知请设为0
 const YOUTH_HOST = "https://kd.youth.cn/WebApi/";
 const notify = $.isNode() ? require('../sendNotify') : '';
@@ -161,6 +164,7 @@ else if ($.time('HH')>4&&$.time('HH')<8){
   .catch((e) => $.logErr(e))
   .finally(() => $.done())
 
+
 function GetCookie() {
    if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/TaskCenter\/(sign|getSign)/)) {
    const signheaderVal = JSON.stringify($request.headers)
@@ -171,9 +175,9 @@ function GetCookie() {
 else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/article\/complete/)) {
    const articlebodyVal = $request.body
     if (articlebodyVal)        $.setdata(articlebodyVal,'read_zq')
-    $.log(`${$.name} 获取阅读1: 成功,articlebodyVal: ${articlebodyVal}`)
-    $.msg($.name, `获取阅读请求1: 成功🎉`, ``)
-       parent.serverNotify("body","1")
+    $.log(`${$.name} 获取阅读*: 成功,articlebodyVal: ${articlebodyVal}`)
+    $.msg($.name, `获取阅读请求*: 成功🎉`, ``)
+       serverNotify("中青阅读Body参数",articlebodyVal)
        $.msg($.name, `微信推送成功🎉`, ``)
   }
 else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/v5\/user\/app_stay/)) {
@@ -193,10 +197,11 @@ else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/articl
 
 function serverNotify(text, desp) {
     return  new Promise(resolve => {
+        if (SCKEY) {
             //微信server酱推送通知一个\n不会换行，需要两个\n才能换行，故做此替换
             desp = desp.replace(/[\n\r]/g, '\n\n');
             const options = {
-                url: `https://sc.ftqq.com/SCU130046T92a39e06a04095cffab55e3e90a8c0345fbf3aa20c5ce.send`,
+                url: `https://sc.ftqq.com/${SCKEY}.send`,
                 body: `text=${text}&desp=${desp}`,
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -220,6 +225,10 @@ function serverNotify(text, desp) {
                     resolve(data);
                 }
             })
+        } else {
+            console.log('\n您未提供server酱的SCKEY，取消微信推送消息通知');
+            resolve()
+        }
     })
 }
 
