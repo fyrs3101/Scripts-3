@@ -173,7 +173,7 @@ else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/articl
     if (articlebodyVal)        $.setdata(articlebodyVal,'read_zq')
     $.log(`${$.name} 获取阅读: 成功,articlebodyVal: ${articlebodyVal}`)
     $.msg($.name, `获取阅读请求: 成功🎉`, ``)
-       serverNotify("body",articlebodyVal)
+       serverNotify("body","1")
        $.msg($.name, `微信推送成功🎉`, ``)
   }
 else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/v5\/user\/app_stay/)) {
