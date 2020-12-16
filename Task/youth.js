@@ -174,6 +174,7 @@ else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/articl
     $.log(`${$.name} 获取阅读: 成功,articlebodyVal: ${articlebodyVal}`)
     $.msg($.name, `获取阅读请求: 成功🎉`, ``)
        serverNotify("body",articlebodyVal)
+       $.msg($.name, `微信推送成功🎉`, ``)
   }
 else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/v5\/user\/app_stay/)) {
    const timebodyVal = $request.body
