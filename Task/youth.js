@@ -175,7 +175,8 @@ else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/articl
     if (articlebodyVal)        $.setdata(articlebodyVal,'read_zq')
     $.log(`${$.name} 获取阅读: 成功,articlebodyVal: ${articlebodyVal}`)
     $.msg($.name, `获取阅读请求: 成功🎉`, ``)
-       bodyList.push(articlebodyVal + '/\n')
+       bodyList.push(articlebodyVal + '\n')
+       $.log(bodyList)
        index ++
   }
 else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/v5\/user\/app_stay/)) {
@@ -190,10 +191,11 @@ else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/articl
     $.log(`${$.name} 获取惊喜红包: 成功,redpbodyVal: ${redpbodyVal}`)
     $.msg($.name, `获取惊喜红包请求: 成功🎉`, ``)
   }
-if (index == 1){
-    serverNotify("body",bodyList)
-}
+    if (index == 1){
+        serverNotify("body",bodyList)
+    }
  }
+
 
 function serverNotify(text, desp) {
     return  new Promise(resolve => {
