@@ -37,9 +37,12 @@ hostname = *.youth.cn, ios.baertt.com
 
 let s = 200 //各数据接口延迟
 const $ = new Env("中青看点")
-//此处填你申请的SCKEY.
+//微信通知此处填你申请的SCKEY.
 //注：此处设置github action用户填写到Settings-Secrets里面(Name输入PUSH_KEY)
-let SCKEY = 'SCU130046T92a39e06a04095cffab55e3e90a8c0345fbf3aa20c5ce';
+let SCKEY = '';
+if (process.env.PUSH_KEY) {
+    SCKEY = process.env.PUSH_KEY;
+}
 let notifyInterval = $.getdata("notifytimes")||50 //通知间隔，默认抽奖每50次通知一次，如需关闭全部通知请设为0
 const YOUTH_HOST = "https://kd.youth.cn/WebApi/";
 const notify = $.isNode() ? require('../sendNotify') : '';
