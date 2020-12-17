@@ -16,31 +16,15 @@ by Sunert
 特别感谢
 @Chavy
 @Nobyda
-~~~~~~~~~~~~~~~~
-
-Surge 4.0 :
-[Script]
-快手 = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/kuaishou.js,script-update-interval=0
-
-快手 = type=http-request,pattern=http:\/\/uploads2\.gifshow\.com\/rest\/n\/system\/speed,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/kuaishou.js
-
-~~~~~~~~~~~~~~~~
-Loon 2.1.0+
-[Script]
-# 本地脚本
-cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/kuaishou.js, enabled=true, tag=快手
-
-http-request http:\/\/uploads2\.gifshow\.com\/rest\/n\/system\/speed script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/kuaishou.js
-
 -----------------
 
 QX 1.0.7+ :
 [task_local]
-0 9 * * * kuaishou.js
+0 9 * * * https://raw.githubusercontent.com/muxu-i/Scripts/master/Task/ksqd.js
 
 [rewrite_local]
 
-http:\/\/uploads2\.gifshow\.com\/rest\/n\/system\/speed url script-request-header https://raw.githubusercontent.com/Sunert/Scripts/master/Task/kuaishou.js
+http:\/\/uploads2\.gifshow\.com\/rest\/n\/system\/speed url script-request-header https://raw.githubusercontent.com/muxu-i/Scripts/master/Task/ksqd.js
 
 ~~~~~~~~~~~~~~~~
 
