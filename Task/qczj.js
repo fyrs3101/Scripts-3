@@ -53,13 +53,13 @@ cointowalletbodyVal  👉  cointowalletBODY
 hostname=mobile.app.autohome.com.cn,openapi.autohome.com.cn,
 ############## 圈x
 #汽车之家极速版获取header
-https:\/\/(mobile\.app\.autohome\.com\.cn\/*||openapi\.autohome\.com\.cn\/*) url script-request-header https://raw.githubusercontent.com/ziye12/QCZJSPEED/master/Task/qczjspeed.js
+https:\/\/(mobile\.app\.autohome\.com\.cn\/*||openapi\.autohome\.com\.cn\/*) url script-request-header https://raw.githubusercontent.com/muxu-i/Scripts/master/Task/qczj.js
 
 #汽车之家极速版获取body
-https:\/\/(mobile\.app\.autohome\.com\.cn\/*||openapi\.autohome\.com\.cn\/*) url script-request-body https://raw.githubusercontent.com/ziye12/QCZJSPEED/master/Task/qczjspeed.js
+https:\/\/(mobile\.app\.autohome\.com\.cn\/*||openapi\.autohome\.com\.cn\/*) url script-request-body https://raw.githubusercontent.com/muxu-i/Scripts/master/Task/qczj.js
 
 #汽车之家极速版获取时段body
-http:\/\/mobile\.app\.autohome\.com\.cn\/fasthome\/mainpagecoin\/addCoin url script-request-body https://raw.githubusercontent.com/ziye12/QCZJSPEED/master/Task/qczjspeed.js
+http:\/\/mobile\.app\.autohome\.com\.cn\/fasthome\/mainpagecoin\/addCoin url script-request-body https://raw.githubusercontent.com/muxu-i/Scripts/master/Task/qczj.js
 
 
 
@@ -68,7 +68,7 @@ http:\/\/mobile\.app\.autohome\.com\.cn\/fasthome\/mainpagecoin\/addCoin url scr
 
 const $ = Env("汽车之家极速版");
 $.idx = ($.idx = ($.getval('qczjSuffix') || '1') - 1) > 0 ? ($.idx + 1 + '') : ''; // 账号扩展字符
-const notify = $.isNode() ? require("./sendNotify") : "";
+const notify = $.isNode() ? require("../sendNotify") : "";
 
 let COOKIES_SPLIT = "\n"; // 自定义多cookie之间连接的分隔符，默认为\n换行分割，不熟悉的不要改动和配置，为了兼容本地node执行
 
