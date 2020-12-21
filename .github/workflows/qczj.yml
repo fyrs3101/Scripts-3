@@ -37,12 +37,12 @@ jobs:
       - name: npm install
         if: env.QCZJ_GetUserInfoURL
         run: |
-          cd ~/QCZJSPEED
+          cd ~/Scripts
           npm install
       - name: '运行 【汽车之家极速版】'
         if: env.QCZJ_GetUserInfoURL
         run: |
-          cd ~/QCZJSPEED
+          cd ~/Scripts
           node Task/qczj.js
         env:
           PUSH_KEY: ${{ secrets.PUSH_KEY }}
