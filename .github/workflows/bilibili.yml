@@ -6,7 +6,7 @@ name: bilibili
 on:
   workflow_dispatch:
   schedule:
-     - cron: '0 9,23 * * *'
+     - cron: '0 9,13 * * *'
   watch:
     types: started
 
@@ -16,6 +16,7 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
     env:
         BILI_COOKIE: ${{ secrets.BILI_COOKIE }}
+        TZ: Asia/shanghai
     steps:
       - name: Checkout
         run: |
