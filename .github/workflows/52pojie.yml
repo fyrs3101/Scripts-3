@@ -6,7 +6,7 @@ name: 吾爱破解
 on:
   workflow_dispatch:
   schedule:
-     - cron: '0 9,23 * * *'
+     - cron: '0 10,20 * * *'
   watch:
     types: started
 
@@ -16,6 +16,7 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
     env:
         PJ_COOKIE: ${{ secrets.PJ_COOKIE }}
+        TZ: Asia/shanghai
     steps:
       - name: Checkout
         run: |
