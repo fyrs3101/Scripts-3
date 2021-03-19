@@ -19,7 +19,7 @@ https:\/\/haokan\.baidu\.com\/activity\/h5\/vault\?productid=\d url script-reque
 */
 const $ = new Env('百度极速版')
 let CookieArr = [],cashArr=[];
-const notify = $.isNode() ? require('../sendNotify') : '';
+const notify = $.isNode() ? require('./sendNotify') : '';
 const baiducks = $.getdata('bdspeed')
 let baiducash = $.getdata(`cash_baidu`);
 
@@ -33,85 +33,85 @@ if (isGetCookie = typeof $request !== 'undefined') {
 }
 
 if(!$.isNode()&&baiducks && baiducks.indexOf('&')==-1){
-    CookieArr.push(baiducks);
+  CookieArr.push(baiducks);
     cashArr.push($.getdata("cash_baidu")||30)
 } else {
-    if ($.isNode()) {
-        if (process.env.BAIDU_COOKIE && process.env.BAIDU_COOKIE.indexOf('&') > -1) {
-            BDCookie = process.env.BAIDU_COOKIE.split('&');
-        }
-        else if (process.env.BAIDU_COOKIE && process.env.BAIDU_COOKIE.indexOf('\n') > -1) {
-            BDCookie = process.env.BAIDU_COOKIE.split('\n');
-        } else {
-            BDCookie = [process.env.BAIDU_COOKIE]
-        };
-        if (process.env.BAIDU_CASH && process.env.BAIDU_CASH.indexOf('&') > -1) {
-            BDCASH = process.env.BAIDU_CASH.split('&');
-        }
-        else if (process.env.BAIDU_CASH && process.env.BAIDU_CASH.indexOf('\n') > -1) {
-            BDCASH = process.env.BAIDU_CASH.split('\n');
-        } else {
-            BDCASH = [process.env.BAIDU_CASH]
-        }
-    } else if (!$.isNode()&&baiducks && baiducks.indexOf('&')>-1){
-        BDCookie = baiducks.split("&")
-        BDCASH = [baiducash]
-    }
-
-    Object.keys(BDCookie).forEach((item) => {
-        if (BDCookie[item]) {
-            CookieArr.push(BDCookie[item])
-        }
-    });
-    Object.keys(BDCASH).forEach((item) => {
-        if (BDCASH[item]) {
-            cashArr.push(BDCASH[item])
-        }
-    })
-    console.log(`您共提供${CookieArr.length}个百度账号 Cookie`)
+if ($.isNode()) {
+  if (process.env.BAIDU_COOKIE && process.env.BAIDU_COOKIE.indexOf('&') > -1) {
+  BDCookie = process.env.BAIDU_COOKIE.split('&');
+  }
+ else if (process.env.BAIDU_COOKIE && process.env.BAIDU_COOKIE.indexOf('\n') > -1) {
+  BDCookie = process.env.BAIDU_COOKIE.split('\n');
+  } else {
+  BDCookie = [process.env.BAIDU_COOKIE]
+  };
+  if (process.env.BAIDU_CASH && process.env.BAIDU_CASH.indexOf('&') > -1) {
+  BDCASH = process.env.BAIDU_CASH.split('&');
+  }
+ else if (process.env.BAIDU_CASH && process.env.BAIDU_CASH.indexOf('\n') > -1) {
+  BDCASH = process.env.BAIDU_CASH.split('\n');
+  } else {
+  BDCASH = [process.env.BAIDU_CASH]
+  }
+} else if (!$.isNode()&&baiducks && baiducks.indexOf('&')>-1){
+  BDCookie = baiducks.split("&")
+  BDCASH = [baiducash]
 }
 
+  Object.keys(BDCookie).forEach((item) => {
+        if (BDCookie[item]) {
+          CookieArr.push(BDCookie[item])
+        } 
+    });
+  Object.keys(BDCASH).forEach((item) => {
+        if (BDCASH[item]) {
+          cashArr.push(BDCASH[item])
+        } 
+    })
+    console.log(`您共提供${CookieArr.length}个百度账号 Cookie`)
+ }
+
 !(async() =>{
-    if (!CookieArr[0]) {
-        console.log($.name, '【提示】请把百度Cookie填入Github 的 Secrets 中，请以&或者换行隔开');
-        $.done()
-    };
+  if (!CookieArr[0]) {
+    console.log($.name, '【提示】请把百度Cookie填入Github 的 Secrets 中，请以&或者换行隔开');
+    $.done()
+  };
     timeZone = new Date().getTimezoneOffset() / 60;
     timestamp = Date.now()+ (8+timeZone) * 60 * 60 * 1000;
     bjTime = new Date(timestamp).toLocaleString('zh',{hour12:false,timeZoneName: 'long'});
     console.log(`\n === 脚本执行 ${bjTime} ===\n`);
-    for (let i = 0; i < CookieArr.length; i++) {
-        if (CookieArr[i]) {
-            cookieval = CookieArr[i];
-            withcash = cashArr[i];
-            $.index = i + 1;
-            await userInfo();
-            await $.wait(1000);
-            if ($.isNode()) {
-                if (process.env.BAIDU_TASK) {
-                    taskON = process.env.BAIDU_TASK
-                }
-            }
-            if (taskON == "true") {
-                $.desc = "";
-                await firstbox();
-                await TaskCenter();
-            }
-        }
+  for (let i = 0; i < CookieArr.length; i++) {
+    if (CookieArr[i]) {
+      cookieval = CookieArr[i];
+      withcash = cashArr[i];
+      $.index = i + 1;
+      await userInfo();
+      await $.wait(1000);
+      if ($.isNode()) {
+        if (process.env.BAIDU_TASK) {
+         taskON = process.env.BAIDU_TASK
+       }
+      } 
+      if (taskON == "true") {
+        $.desc = "";
+        await firstbox();
+        await TaskCenter();
+      }
     }
+  }
 })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
-
+  
 function confApi(api, body, RefererUrl) {
     return {
-        url: 'https://haokan.baidu.com/activity/'+api,
-        headers:{
-            'Cookie': cookieval,
-            'User-Agent': UA,
-            'Referer': RefererUrl?RefererUrl:''
-        },
-        body:body
+       url: 'https://haokan.baidu.com/activity/'+api,
+       headers:{
+           'Cookie': cookieval,
+           'User-Agent': UA,
+           'Referer': RefererUrl?RefererUrl:''
+       },
+       body:body
     }
 }
 //签到
@@ -125,8 +125,8 @@ function getsign() {
                 await invite()
             } else {
                 $.sub = `签到失败❌`,
-                    $.desc = `说明: ` + get_sign.msg+"\n",
-                    $.msg($.name, $.sub, $.desc);
+                $.desc = `说明: ` + get_sign.msg+"\n",
+                $.msg($.name, $.sub, $.desc);
                 //$.done()
             }
             resolve()
@@ -135,22 +135,22 @@ function getsign() {
 }
 
 function withDraw(cash) {
-    return new Promise((resolve, reject) =>{
-        $.get(confApi(`acuserwithdraw/confirm?productid=2&amount=${cash*100}&trade_type=1`), async(error, resp, data) =>{
-            let get_cash = JSON.parse(data);
-            if (get_cash.errno == 0) {
-                $.sub = ' 提现成功: 到账 ' + get_cash.data.money + "元 ";
-                $.msg($.name, $.sub);
-                if ($.isNode()) {
-                    await notify.sendNotify($.name + " 成功提现" + withcash + "元\n" + $.sub)
-                }
-            } else {
-                $.log(data + "\n " + get_cash.msg);
-                $.msg($.name, get_cash.msg)
-            }
-            resolve()
-        })
+  return new Promise((resolve, reject) =>{
+    $.get(confApi(`acuserwithdraw/confirm?productid=2&amount=${cash*100}&trade_type=1`), async(error, resp, data) =>{
+      let get_cash = JSON.parse(data);
+      if (get_cash.errno == 0) {
+        $.sub = ' 提现成功: 到账 ' + get_cash.data.money + "元 ";
+        $.msg($.name, $.sub);
+        if ($.isNode()) {
+          await notify.sendNotify($.name + " 成功提现" + withcash + "元\n" + $.sub)
+        }
+      } else {
+        $.log(data + "\n " + get_cash.msg);
+        $.msg($.name, get_cash.msg)
+      }
+      resolve()
     })
+  })
 }
 
 
@@ -172,47 +172,47 @@ function invite() {
 }
 
 function userInfo() {
-    return new Promise((resolve, reject) =>{
-        $.post(confApi('api/tenure/osname=baiduboxapp','sign=a329b14e561e5f42d466d568623cd972&time=1612958577&productid=2'), async(error, resp, data) =>{
-            try {
-                let get_pay = JSON.parse(data);
-                //$.log("获取收益信息:"+data +'\n')
-                if (get_pay.errno == 0) {
-                    availablecoin = get_pay.data.available_coin,
-                        enabledcoin = get_pay.data.enabled_coin,
-                        enabledmoney = get_pay.data.enabled_money,
-                        yesterdaycoin = get_pay.data.yesterday_coin;
-                    if(CookieArr.length==1){
-                        username = $.getdata('baidu_nick') ? $.getdata('baidu_nick') : null;
-                    } else {
-                        username = "账号"+ $.index
-                    }
-                    $.sub = " 昵称:" + username + " 现金:" + enabledmoney + "元 金币:" + availablecoin;
-                    $.log("\n********** 昵称:" + username + " 现金:" + enabledmoney + "元 **********\n");
-                    if (parseInt(enabledmoney) >= Number(withcash) && $.time("HH") == "06") {
-                        await withDraw(withcash);
-                        $.done()
-                    };
-                    if (enabledcoin > 100) {
-                        coinnum = parseInt(enabledcoin / 100) * 100;
-                        await coinexChange()
-                    }
-                }
-            } catch(e) {
-                $.log("获取用户信息失败" + e)
-            } finally {
-                resolve()
-            }
-        })
+  return new Promise((resolve, reject) =>{
+    $.post(confApi('api/tenure/osname=baiduboxapp','sign=a329b14e561e5f42d466d568623cd972&time=1612958577&productid=2'), async(error, resp, data) =>{
+      try {
+        let get_pay = JSON.parse(data);
+        //$.log("获取收益信息:"+data +'\n')
+        if (get_pay.errno == 0) {
+          availablecoin = get_pay.data.available_coin,
+          enabledcoin = get_pay.data.enabled_coin,
+          enabledmoney = get_pay.data.enabled_money,
+          yesterdaycoin = get_pay.data.yesterday_coin;
+       if(CookieArr.length==1){
+          username = $.getdata('baidu_nick') ? $.getdata('baidu_nick') : null;
+         } else {
+          username = "账号"+ $.index
+         }
+          $.sub = " 昵称:" + username + " 现金:" + enabledmoney + "元 金币:" + availablecoin;
+          $.log("\n********** 昵称:" + username + " 现金:" + enabledmoney + "元 **********\n");
+          if (parseInt(enabledmoney) >= Number(withcash) && $.time("HH") == "06") {
+            await withDraw(withcash);
+            $.done()
+          };
+          if (enabledcoin > 100) {
+            coinnum = parseInt(enabledcoin / 100) * 100;
+            await coinexChange()
+          }
+        }
+      } catch(e) {
+        $.log("获取用户信息失败" + e)
+      } finally {
+        resolve()
+      }
     })
+  })
 }
 
 function coinexChange() {
     return new Promise((resolve, reject) =>{
         $.get(confApi(`api/coinexchange?coinnum=${coinnum}&autolock=1&productid=2&ugVersion=5.1.6.10`), (error, resp, data) =>{
-            let exchange = JSON.parse(data)
-            //$.log(data)
-            if (exchange.errno == 0) {
+             let exchange = JSON.parse(data)
+               //$.log(data)
+             if (exchange.errno == 0) {
                 $.log("兑换成功，"+ exchange.data.message)
                 $.msg($.name, "金币兑换成功，"+ exchange.data.message)
             }
@@ -222,115 +222,115 @@ function coinexChange() {
 }
 
 function TaskCenter() {
-    return new Promise((resolve, reject) =>{
-        $.get(confApi('h5/vaultnew?productid=2&fromcsr=1&system=ios&_format=json'), async(error, resp, data) =>{
-            try {
-                let get_tasks = JSON.parse(data);
-                if(get_tasks.errno==7){
-                    $.msg($.name, get_tasks.msg, "请更换Cookie后，重试");
-                    return
-                } else if(get_tasks.data.uname!=""&&CookieArr.length==1){
-                    username = get_tasks.data.uname;
-                    $.setdata(username,'baidu_nick')
-                }
-                isblack = get_tasks.data.is_black
+  return new Promise((resolve, reject) =>{
+    $.get(confApi('h5/vaultnew?productid=2&fromcsr=1&system=ios&_format=json'), async(error, resp, data) =>{
+     try {
+        let get_tasks = JSON.parse(data);
+      if(get_tasks.errno==7){
+      $.msg($.name, get_tasks.msg, "请更换Cookie后，重试");
+      return
+     } else if(get_tasks.data.uname!=""&&CookieArr.length==1){
+        username = get_tasks.data.uname;
+        $.setdata(username,'baidu_nick')
+        }
+       isblack = get_tasks.data.is_black
 
-                $.log("      🛎 ========== 任务开始 ========== 🛎     ");
-                tasks = get_tasks.data.comps;
-                for (x in tasks) {
-                    if (isblack == true) {
-                        $.msg($.name + " 账号" + username + "已黑号", "您的金币和余额已被冻结，请联系客服处理");
-                        break;
-                    }
-                    taskid = tasks[x].taskId;
-                    id = tasks[x].id;
-                    if (tasks[x].name == "signIn") {
-                        for (z in tasks[x].data.checkin_list) {
-                            signs = tasks[x].data.checkin_list
-                            if (tasks[x].data.current_date == signs[z].date) {
-                                if (signs[z].is_checkin == 0) {
-                                    await getsign()
-                                } else {
-                                    $.desc = "【签到结果】✅ 今日+" + signs[z].coin_reward + "金币\n";
-                                    $.log($.desc)
-                                }
-                            }
-                        }
-                    } else {
-                        await getConfigs()
-                    }
+        $.log("      🛎 ========== 任务开始 ========== 🛎     "); 
+        tasks = get_tasks.data.comps;
+        for (x in tasks) {
+        if (isblack == true) {
+        $.msg($.name + " 账号" + username + "已黑号", "您的金币和余额已被冻结，请联系客服处理");
+        break;
+       }
+          taskid = tasks[x].taskId;
+          id = tasks[x].id;
+          if (tasks[x].name == "signIn") {
+            for (z in tasks[x].data.checkin_list) {
+              signs = tasks[x].data.checkin_list
+              if (tasks[x].data.current_date == signs[z].date) {
+                if (signs[z].is_checkin == 0) {
+                  await getsign()
+                } else {
+                  $.desc = "【签到结果】✅ 今日+" + signs[z].coin_reward + "金币\n";
+                  $.log($.desc)
                 }
-            } catch(e) {
-                $.logErr(e, data);
-            } finally {
-                $.msg($.name, $.sub, $.desc)
-                resolve()
+              }
             }
-        })
+          } else {
+            await getConfigs()
+          }
+        }
+      } catch(e) {
+        $.logErr(e, data);
+      } finally {
+        $.msg($.name, $.sub, $.desc)
+        resolve()
+      }
     })
+  })
 }
 
 async function getConfigs() {
-    if (tasks[x].name == "taskList") {
-        maxTitle = tasks[x].data.title;
-        $.log("\n去" + maxTitle);
-        if (maxTitle == "玩游戏赚现金") {
-            //$.log(JSON.stringify(tasks[x].data))
-        } else {
-            for (arr of tasks[x].data.tasklist) {
-                taskName = "【" + arr.title + "】";
-                tid = arr.id;
-                taskType = arr.type;
-                if (arr.taskStatus == "1") {
-                    $.log(taskName + " 已完成\n");
-                    $.desc += taskName + "✅ 已完成\n";
-                } else if (taskType == 'openApp') {
-                    RefererUrl = arr.adLink;
-                    $.log("\n"+taskName+" 类型: "+arr.type_name+"       ")
-                    if( tid =="815"){
-                        RefererUrl="https://eopa.baidu.com/page/pagekey-ASKWNd8W?productid=2&type=1&tid=815"
-                    }
-                    await activeBox()
-                } else if (taskType == 'watch') {
-                    tips = arr.tips;
-                    count = arr.total_count;
-                    $.log("\n"+taskName + tips + "总计" + count + "次      ");
-                    if (arr.taskStatus == 0&&$.desc.indexOf("【签到结果】✅")>-1) {
-                        await $.wait(2000);
-                        await get_search("184")
-                    }
-                    $.desc += taskName + tips + "总计" + count + "次\n";
-                };
-            }
-        }
-    }
-    if (tasks[x].name == "popularRecommendation") {
-        //$.log(tasks[x].data.recommendCompName)
-    }
-    if (id == "1068") {
-        if (tasks[x].data.unOpenHeadBoxDialog.isShowBusiness == true ){
-            tid = "817"
-            taskName = "【"+tasks[x].data.unOpenHeadBoxDialog.btn[0].btnText+"】"
-            RefererUrl = tasks[x].data.unOpenHeadBoxDialog.btn[0].iosAdUrl
-            $.log("\n"+taskName+"  ")
-            await activeBox()
-        }
-        if (tasks[x].data.gameheader.coinInfo.coinStatus == 2) {
-            $.desc += "\n【头部宝箱】✅ 总计金币" + tasks[x].data.gameheader.coinInfo.coinCount + "\n";
-            $.log($.desc)
-        } else {
-            for (headerbox of tasks[x].data.gameheader.progressList) {
-                if (headerbox.status == 1) {
-                    await $.wait(2000);
-                    await headerBox()
-                }
-            }
+  if (tasks[x].name == "taskList") {
+    maxTitle = tasks[x].data.title;
+    $.log("\n去" + maxTitle);
+    if (maxTitle == "玩游戏赚现金") {
+      //$.log(JSON.stringify(tasks[x].data))
+    } else {
+      for (arr of tasks[x].data.tasklist) {
+        taskName = "【" + arr.title + "】";
+        tid = arr.id;
+        taskType = arr.type;
+        if (arr.taskStatus == "1") {
+          $.log(taskName + " 已完成\n");
+          $.desc += taskName + "✅ 已完成\n";
+        } else if (taskType == 'openApp') {
+          RefererUrl = arr.adLink;
+          $.log("\n"+taskName+" 类型: "+arr.type_name+"       ")
+        if( tid =="815"){
+          RefererUrl="https://eopa.baidu.com/page/pagekey-ASKWNd8W?productid=2&type=1&tid=815"
+         }
+         await activeBox()
+        } else if (taskType == 'watch') {
+             tips = arr.tips;
+             count = arr.total_count;
+             $.log("\n"+taskName + tips + "总计" + count + "次      ");
+          if (arr.taskStatus == 0&&$.desc.indexOf("【签到结果】✅")>-1) {
+            await $.wait(2000);
+            await get_search("184")
+          }
+          $.desc += taskName + tips + "总计" + count + "次\n";
         };
-        for ( jingangs of tasks[x].data.jingang.list){
+      }
+    }
+  }
+  if (tasks[x].name == "popularRecommendation") {
+    //$.log(tasks[x].data.recommendCompName)
+  }
+  if (id == "1068") {
+    if (tasks[x].data.unOpenHeadBoxDialog.isShowBusiness == true ){
+      tid = "817"
+      taskName = "【"+tasks[x].data.unOpenHeadBoxDialog.btn[0].btnText+"】"
+      RefererUrl = tasks[x].data.unOpenHeadBoxDialog.btn[0].iosAdUrl
+      $.log("\n"+taskName+"  ")
+      await activeBox()
+}
+    if (tasks[x].data.gameheader.coinInfo.coinStatus == 2) {
+      $.desc += "\n【头部宝箱】✅ 总计金币" + tasks[x].data.gameheader.coinInfo.coinCount + "\n";
+      $.log($.desc)
+    } else {
+      for (headerbox of tasks[x].data.gameheader.progressList) {
+        if (headerbox.status == 1) {
+          await $.wait(2000);
+          await headerBox()
+        }
+      }
+    };
+  for ( jingangs of tasks[x].data.jingang.list){
             jingangType = jingangs.jingangType,
-                taskName = "【"+jingangs.jingangName+"】 ",
-                RefererUrl = jingangs.jingangUrl,
-                tid = jingangs.jingangTid;
+            taskName = "【"+jingangs.jingangName+"】 ",
+            RefererUrl = jingangs.jingangUrl,
+            tid = jingangs.jingangTid;
             if (jingangType == 2) {
                 if (tasks[x].data.jingang.countDown[tid].countDown == 0) {
                     await $.wait(1000);
@@ -339,192 +339,192 @@ async function getConfigs() {
                 } else {
                     $.log("\n"+taskName+ " 请等待" +Number(tasks[x].data.jingang.countDown[tid].countDown / 60).toFixed(2) + "分钟")
                 }
-            }
-        }
-    }
+          }
+     }
+  }
 }
 
 
 //首页宝箱
 function firstbox() {
-    return new Promise((resolve, reject) =>{
-        let bdurl = {
-            url: 'https://mbrowser.baidu.com/lite/gold/receive?service=bdbox',
-            headers: {
-                "Cookie": cookieval,
-                "User-Agent": UA
-            },
-            body: 'task_type=-1&task_id=-1'
-        }
-        $.post(bdurl, (error, resp, data) =>{
-            let get_first = JSON.parse(data)
-            //$.log("获取首页宝箱信息:"+data +'\n')
-            if (get_first.err_no == 0) {
-                $.desc += "【首页宝箱】" + get_first.data.result.tips + "， " + get_first.data.result.countdown_time + "秒后再次开启宝箱\n"
-            } else if (get_first.err_no == 10079) {
-                $.desc += "【首页宝箱】✅ " + get_first.tip + '\n'
-            } else if (get_first.err_no == 10060) {
-                $.log("首页宝箱开启失败"+get_first.tip+"\n")
-            }
-            resolve()
-        })
+  return new Promise((resolve, reject) =>{
+    let bdurl = {
+      url: 'https://mbrowser.baidu.com/lite/gold/receive?service=bdbox',
+      headers: {
+        "Cookie": cookieval,
+        "User-Agent": UA
+      },
+      body: 'task_type=-1&task_id=-1'
+    }
+    $.post(bdurl, (error, resp, data) =>{
+      let get_first = JSON.parse(data)
+      //$.log("获取首页宝箱信息:"+data +'\n')
+      if (get_first.err_no == 0) {
+        $.desc += "【首页宝箱】" + get_first.data.result.tips + "， " + get_first.data.result.countdown_time + "秒后再次开启宝箱\n"
+      } else if (get_first.err_no == 10079) {
+        $.desc += "【首页宝箱】✅ " + get_first.tip + '\n'
+      } else if (get_first.err_no == 10060) {
+        $.log("首页宝箱开启失败"+get_first.tip+"\n")
+      }
+      resolve()
     })
+  })
 }
 
 function activeBox() {
-    return new Promise((resolve, reject) =>{
-        let actboxurl = {
-            url: `https://haokan.baidu.com/activity/tasks/active?productid=2&id=${tid}`,
-            headers: {
-                Cookie: cookieval,
-                'User-Agent': UA,
-                Referer: RefererUrl
-            }
-        }
-        $.get(actboxurl, async(error, resp, data)=>{
-            try{
-                let act_box = JSON.parse(data);
-                if ((tid == 587 || tid == 590) && act_box.errno == 0) {
-                    await get_pkg()
-                } else if (act_box.errno == 1){
-                    $.desc+= "【taskName】"+ act_box.msg+"\n";
-                    $.log(act_box.msg+"，请检查Cookie是否包含BAIDUCUID;\n");
-                    return
-                } else if (data.indexOf("EquipmentComplete") >-1) {
-                    $.log(act_box.data.data+"\n")
-                } else {
-                    await get_pkg()
-                }
-            } catch(e) {
-                $.logErr(e, data);
-            } finally {
-                resolve()
-            }
-        })
+  return new Promise((resolve, reject) =>{
+    let actboxurl = {
+      url: `https://haokan.baidu.com/activity/tasks/active?productid=2&id=${tid}`,
+      headers: {
+        Cookie: cookieval,
+        'User-Agent': UA,
+        Referer: RefererUrl
+      }
+    }
+    $.get(actboxurl, async(error, resp, data)=>{
+    try{
+      let act_box = JSON.parse(data);
+       if ((tid == 587 || tid == 590) && act_box.errno == 0) {
+        await get_pkg()
+      } else if (act_box.errno == 1){
+        $.desc+= "【taskName】"+ act_box.msg+"\n";
+        $.log(act_box.msg+"，请检查Cookie是否包含BAIDUCUID;\n");
+        return
+      } else if (data.indexOf("EquipmentComplete") >-1) {
+        $.log(act_box.data.data+"\n")
+      } else {
+        await get_pkg()
+      }
+      } catch(e) {
+        $.logErr(e, data);
+      } finally {
+        resolve()
+      }
     })
+  })
 }
 
 //视频
 function get_pkg() {
-    return new Promise((resolve, reject) =>{
-        let pkgurl = {
-            url: `https://haokan.baidu.com/activity/acad/rewardad?device=%7B%22imei_md5%22%3A%22%22%2C%22device_type%22%3A1%2C%22model%22%3A%22IPHONE%22%2C%22manufacturer%22%3A%22Apple%22%2C%22os_version%22%3A%2213.7%22%2C%22idfa%22%3A%22_a2S8_aq28_qa28qii2A8laJ28gxC28Q_iXni0uKvNYIPviVzaHtiYah2ul6iHim_l2880uQvflqisa9liBgIgarv8oIOHutlhSPu_ux2a_Wi-uRz_qAC%22%7D&network=%7B%22connect_type%22%3A1%2C%22carrier%22%3A0%7D&productid=2&tid=${tid}&type=1`,
-            headers: {
-                Cookie: cookieval,
-                'User-Agent': UA,
-                'Referer': RefererUrl
-            }
-        }
-        $.get(pkgurl, async(error, resp, data) =>{
-            let get_pkg = JSON.parse(data);
-            if (get_pkg.errno == 0 && get_pkg.data.isDone == 0) {
-                Pkg = get_pkg.data.adInfo[0].material.pkg,
-                    taskid = get_pkg.data.taskPf.taskId;
-                $.log(" 获取任务成功，等待25s获取收益");
-                //$.log("\n" + taskid + " " + Pkg);
-                await $.wait(25000);
-                await finishTask()
-            } else if (get_pkg.errno == 0 && get_pkg.data.isDone == 1) {
-                // $.desc += taskName + "✅ 已完成\n";
-                // $.log(taskName + "已完成\n")
-            }
-            resolve()
-        })
+  return new Promise((resolve, reject) =>{
+    let pkgurl = {
+      url: `https://haokan.baidu.com/activity/acad/rewardad?device=%7B%22imei_md5%22%3A%22%22%2C%22device_type%22%3A1%2C%22model%22%3A%22IPHONE%22%2C%22manufacturer%22%3A%22Apple%22%2C%22os_version%22%3A%2213.7%22%2C%22idfa%22%3A%22_a2S8_aq28_qa28qii2A8laJ28gxC28Q_iXni0uKvNYIPviVzaHtiYah2ul6iHim_l2880uQvflqisa9liBgIgarv8oIOHutlhSPu_ux2a_Wi-uRz_qAC%22%7D&network=%7B%22connect_type%22%3A1%2C%22carrier%22%3A0%7D&productid=2&tid=${tid}&type=1`,
+      headers: {
+        Cookie: cookieval,
+        'User-Agent': UA,
+        'Referer': RefererUrl
+      }
+    }
+    $.get(pkgurl, async(error, resp, data) =>{
+      let get_pkg = JSON.parse(data);
+      if (get_pkg.errno == 0 && get_pkg.data.isDone == 0) {
+        Pkg = get_pkg.data.adInfo[0].material.pkg,
+        taskid = get_pkg.data.taskPf.taskId;
+        $.log(" 获取任务成功，等待25s获取收益");
+        //$.log("\n" + taskid + " " + Pkg);
+        await $.wait(25000);
+        await finishTask()
+      } else if (get_pkg.errno == 0 && get_pkg.data.isDone == 1) {
+        // $.desc += taskName + "✅ 已完成\n";       
+        // $.log(taskName + "已完成\n")
+      }
+      resolve()
     })
+  })
 }
 
 function finishTask() {
-    return new Promise((resolve, reject) =>{
-        let actboxurl = {
-            url: `https://eopa.baidu.com/api/task/1/task/${taskid}/complete?rewardType=coin&rewardVideoPkg=${Pkg}&sys=ios`,
-            headers: {
-                Cookie: cookieval,
-                'User-Agent': UA,
-                Referer: RefererUrl
-            }
+  return new Promise((resolve, reject) =>{
+    let actboxurl = {
+      url: `https://eopa.baidu.com/api/task/1/task/${taskid}/complete?rewardType=coin&rewardVideoPkg=${Pkg}&sys=ios`,
+      headers: {
+        Cookie: cookieval,
+        'User-Agent': UA,
+        Referer: RefererUrl
+      }
+    }
+    $.get(actboxurl, async(error, resp, data) =>{
+      try {
+        let do_task = JSON.parse(data);
+        if (do_task.errno == 0) {
+          $.desc += taskName + "获得收益" + do_task.data.coin + "\n";
+          $.log(taskName + "  获得收益: +" + do_task.data.coin);
+          await $.wait(1000)
+        } else if (do_task.errno == 19001) {
+          $.desc += taskName + "  " + do_task.errmsg + "\n";
+          $.log(taskName + "  " + do_task.errmsg)
+        } else if (do_task.errno == 11004) {
+          $.desc += taskName + "  " + do_task.errmsg + "\n";
+          $.log(taskName + "  " + do_task.errmsg)
         }
-        $.get(actboxurl, async(error, resp, data) =>{
-            try {
-                let do_task = JSON.parse(data);
-                if (do_task.errno == 0) {
-                    $.desc += taskName + "获得收益" + do_task.data.coin + "\n";
-                    $.log(taskName + "  获得收益: +" + do_task.data.coin);
-                    await $.wait(1000)
-                } else if (do_task.errno == 19001) {
-                    $.desc += taskName + "  " + do_task.errmsg + "\n";
-                    $.log(taskName + "  " + do_task.errmsg)
-                } else if (do_task.errno == 11004) {
-                    $.desc += taskName + "  " + do_task.errmsg + "\n";
-                    $.log(taskName + "  " + do_task.errmsg)
-                }
-            } catch(e) {
-                $.logErr(e+data);
-            } finally {
-                resolve()
-            }
-        })
+      } catch(e) {
+        $.logErr(e+data);
+      } finally {
+        resolve()
+      }
     })
+  })
 }
 
 
 function get_search(cmd) {
-    return new Promise((resolve) =>{
-        let geturl = {
-            url: `https://mbd.baidu.com/searchbox?action=feed&cmd=${cmd}&network=1_0&osbranch=i3&osname=baiduboxapp&uid=A49D6DBEA0E8C89406AD1484C84D9134FCF6C8758FHLNHLAJSR&ut=iPhone10%2C1_14.2&ua=1242_2208_iphone_5.0.0.11_0&fv=12.1.0.0`,
-            headers: {
-                Cookie: cookieval,
-                'User-Agent': UA
+  return new Promise((resolve) =>{
+    let geturl = {
+      url: `https://mbd.baidu.com/searchbox?action=feed&cmd=${cmd}&network=1_0&osbranch=i3&osname=baiduboxapp&uid=A49D6DBEA0E8C89406AD1484C84D9134FCF6C8758FHLNHLAJSR&ut=iPhone10%2C1_14.2&ua=1242_2208_iphone_5.0.0.11_0&fv=12.1.0.0`,
+      headers: {
+        Cookie: cookieval,
+        'User-Agent': UA
+      }
+    }
+    $.get(geturl, async(error, resp, data) =>{
+      try {
+        $.log(" tid:" + tid + " 状态码:" + resp.statusCode);
+        let get_search = JSON.parse(data);
+        if (get_search.errno == 0) {
+          for (items of get_search.data[`${cmd}`].itemlist.items) {
+            searchId = items.id,
+            searchname = items.data.title;
+            author = items.data.author
+            if (items.data.mode == "video" || items.data.type == "video") {
+              $.log(" 观看视频: " + searchname + "  ------------ " + author);
             }
+            else if (items.data.mode == "text") {
+              $.log(" 阅读短文: " + searchname + "\n " + "  ------------ " + items.data.tag ? items.data.tag: "");
+            }
+            else if (items.data.mode == "ad") {
+              $.log(" 打开广告: " + author + ": " + searchname);
+            }
+            if (typeof coin == "undefined") {
+              $.log(" 请等待，30s后获取收益\n");
+              await $.wait(30000);  
+              await searchBox(searchId)
+            } else if (coin == 0) {
+              $.log(" 请等待5s获取收益\n");
+              await $.wait(5000);
+              await searchBox(searchId)
+              coin = "undefined";
+            } else if (coin == 3) {
+              $.log(" 金币为3时，跳出运行\n");
+              await $.wait(2000)
+              coin = "undefined";
+              break
+            } else {
+              $.log(" 请等待，30s后获取收益\n");
+              await $.wait(30000);
+              await searchBox(searchId)
+            }
+            //totalcoin += coin
+            //$.log(totalcoin)
+          }
+          //$.desc += taskName + "获得收益"+ totalcoin+ "金币" +coin + "\n"
         }
-        $.get(geturl, async(error, resp, data) =>{
-            try {
-                $.log(" tid:" + tid + " 状态码:" + resp.statusCode);
-                let get_search = JSON.parse(data);
-                if (get_search.errno == 0) {
-                    for (items of get_search.data[`${cmd}`].itemlist.items) {
-                        searchId = items.id,
-                            searchname = items.data.title;
-                        author = items.data.author
-                        if (items.data.mode == "video" || items.data.type == "video") {
-                            $.log(" 观看视频: " + searchname + "  ------------ " + author);
-                        }
-                        else if (items.data.mode == "text") {
-                            $.log(" 阅读短文: " + searchname + "\n " + "  ------------ " + items.data.tag ? items.data.tag: "");
-                        }
-                        else if (items.data.mode == "ad") {
-                            $.log(" 打开广告: " + author + ": " + searchname);
-                        }
-                        if (typeof coin == "undefined") {
-                            $.log(" 请等待，30s后获取收益\n");
-                            await $.wait(30000);
-                            await searchBox(searchId)
-                        } else if (coin == 0) {
-                            $.log(" 请等待5s获取收益\n");
-                            await $.wait(5000);
-                            await searchBox(searchId)
-                            coin = "undefined";
-                        } else if (coin == 3) {
-                            $.log(" 金币为3时，跳出运行\n");
-                            await $.wait(2000)
-                            coin = "undefined";
-                            break
-                        } else {
-                            $.log(" 请等待，30s后获取收益\n");
-                            await $.wait(30000);
-                            await searchBox(searchId)
-                        }
-                        //totalcoin += coin
-                        //$.log(totalcoin)
-                    }
-                    //$.desc += taskName + "获得收益"+ totalcoin+ "金币" +coin + "\n"
-                }
-            } catch(error) {
-                $.logErr(error + data);
-            } finally {
-                resolve()
-            }
-        })
+      } catch(error) {
+        $.logErr(error + data);
+      } finally {
+        resolve()
+      }
     })
+  })
 }
 
 function searchBox(id) {
@@ -535,20 +535,20 @@ function searchBox(id) {
             body: `data={"origin_nid":"${id}","taskid":"${tid}"}`
         };
         $.post(searchurl, async(error, resp, data) =>{
-            //$.log(error + resp.statusCode+"  "+data)
-            try{
-                let do_search = JSON.parse(data);
-                if (do_search.errno == 0 && do_search.data['197'].istip == 1) {
-                    $.log(" 获得收益: " + do_search.data[`197`].tips+"😜\n");
-                    coin = Number(do_search.data[`197`].righttips)
-                    //totalcoin = += coin
-                    await $.wait(1000)
-                } else if (do_search.data[`197`].tips == "") {
-                    coin = 0;
-                    $.log(" 对不起，本次没有收益🥺\n");
-                } else {
-                    $.log("获得收益失败，"+do_search.data[`197`].tips)
-                }
+    //$.log(error + resp.statusCode+"  "+data)
+         try{
+            let do_search = JSON.parse(data);
+            if (do_search.errno == 0 && do_search.data['197'].istip == 1) {
+                $.log(" 获得收益: " + do_search.data[`197`].tips+"😜\n"); 
+                coin = Number(do_search.data[`197`].righttips)
+                //totalcoin = += coin 
+                await $.wait(1000)
+            } else if (do_search.data[`197`].tips == "") {
+                coin = 0;
+                $.log(" 对不起，本次没有收益🥺\n"); 
+            } else {
+            $.log("获得收益失败，"+do_search.data[`197`].tips)
+            }
             }catch(e) {
                 $.logErr(e+data);
             } finally {
@@ -560,7 +560,7 @@ function searchBox(id) {
 
 function showmsg() {
 
-    $.msg($.name,$.sub,$.desc)
+     $.msg($.name,$.sub,$.desc)
 
 }
 function GetCookie() {
