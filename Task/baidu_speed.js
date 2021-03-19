@@ -1,108 +1,60 @@
 /*
-更新时间:2021-02-27 23:30
-百度极速版签到任务，使用脚本有黑号严重，请谨慎使用‼️
+百度极速版签到任务
 
-赞赏:百度极速邀请码`RW9ZSW 点击链接立得红包，最高100元！https://dwz.cn/Oilv4CJ1`,农妇山泉 -> 有点咸，万分感谢，邀请码已失效
-
-本脚本已不再使用其他Cookie，内置自动提现，提现金额默认30元，当当前时间为早上6点且达到提现金额时仅运行提现任务，提现金额小于设置金额时继续运行其他任务。
-
-增加百度任务开关，Actions中Secrets为BAIDU_TASK，值填true或者false
-
-百度极速获取Cookie:点击"任务"即可
-
-https:\/\/haokan\.baidu\.com\/activity\/h5\/vault\?productid=\d url script-request-header https://raw.githubusercontent.com/Sunert/Scripts/master/Task/baidu_speed.js
-
-支持BoxJs多账号，需手动填写，用&或者换行隔开
+本脚本默认使用chavyleung大佬和Nobyda的贴吧ck，获取方法请看大佬仓库说明
 
 ~~~~~~~~~~~~~~~~
 
 */
 const $ = new Env('百度极速版')
-let CookieArr = [],cashArr=[];
-// const notify = $.isNode() ? require('../sendNotify') : '';
-const baiducks = $.getdata('bdspeed')
-let baiducash = $.getdata(`cash_baidu`);
 
-let taskON = $.getdata(`task_baidu`)||"true"//除提现和兑换外其他任务开关;
-let isblack = "false";
+let CookieArr = [];
 let UA = $.getdata('bd_Agent')||'Mozilla/5.0 (iPhone; CPU iPhone OS 14_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 SP-engine/2.24.0 matrixstyle/0 light/1.0(WKWebView) themeUA=Theme/default info baiduboxapp/5.1.6.10 (Baidu; P2 14.2)';
-
-if (isGetCookie = typeof $request !== 'undefined') {
-    GetCookie();
-    $.done()
-}
-
-if(!$.isNode()&&baiducks && baiducks.indexOf('&')==-1){
-  CookieArr.push(baiducks);
-    cashArr.push($.getdata("cash_baidu")||30)
-} else {
+let isblack = "false";
 if ($.isNode()) {
-  if (process.env.BAIDU_COOKIE && process.env.BAIDU_COOKIE.indexOf('&') > -1) {
-  BDCookie = process.env.BAIDU_COOKIE.split('&');
-  }
- else if (process.env.BAIDU_COOKIE && process.env.BAIDU_COOKIE.indexOf('\n') > -1) {
-  BDCookie = process.env.BAIDU_COOKIE.split('\n');
-  } else {
-  BDCookie = [process.env.BAIDU_COOKIE]
-  };
-  if (process.env.BAIDU_CASH && process.env.BAIDU_CASH.indexOf('&') > -1) {
-  BDCASH = process.env.BAIDU_CASH.split('&');
-  }
- else if (process.env.BAIDU_CASH && process.env.BAIDU_CASH.indexOf('\n') > -1) {
-  BDCASH = process.env.BAIDU_CASH.split('\n');
-  } else {
-  BDCASH = [process.env.BAIDU_CASH]
-  }
-} else if (!$.isNode()&&baiducks && baiducks.indexOf('&')>-1){
-  BDCookie = baiducks.split("&")
-  BDCASH = [baiducash]
+    if (process.env.BAIDU_COOKIE && process.env.BAIDU_COOKIE.indexOf('&') > -1) {
+        StartBody = process.env.BAIDU_COOKIE.split('&');
+    }
+    if (process.env.BAIDU_COOKIE && process.env.BAIDU_COOKIE.indexOf('\n') > -1) {
+        BDCookie = process.env.BAIDU_COOKIE.split('\n');
+    } else {
+        BDCookie = process.env.BAIDU_COOKIE.split()
+    }
+    Object.keys(BDCookie).forEach((item) => {
+        if (BDCookie[item]) {
+            CookieArr.push(BDCookie[item])
+        }
+    })
+} else {
+    CookieArr.push($.getdata(`chavy_cookie_tieba`)||$.getdata(`CookieTB`))
 }
 
-  Object.keys(BDCookie).forEach((item) => {
-        if (BDCookie[item]) {
-          CookieArr.push(BDCookie[item])
-        } 
-    });
-  Object.keys(BDCASH).forEach((item) => {
-        if (BDCASH[item]) {
-          cashArr.push(BDCASH[item])
-        } 
-    })
-    console.log(`您共提供${CookieArr.length}个百度账号 Cookie`)
- }
-
-!(async() =>{
-  if (!CookieArr[0]) {
-    console.log($.name, '【提示】请把百度Cookie填入Github 的 Secrets 中，请以&或者换行隔开');
-    $.done()
-  };
+!(async() => {
+    if (!CookieArr[0]) {
+        console.log($.name, '【提示】请把百度Cookie填入Github 的 Secrets 中，请以&或者换行隔开')
+        return;
+    }
+    withcash = 30;
     timeZone = new Date().getTimezoneOffset() / 60;
     timestamp = Date.now()+ (8+timeZone) * 60 * 60 * 1000;
     bjTime = new Date(timestamp).toLocaleString('zh',{hour12:false,timeZoneName: 'long'});
     console.log(`\n === 脚本执行 ${bjTime} ===\n`);
-  for (let i = 0; i < CookieArr.length; i++) {
-    if (CookieArr[i]) {
-      cookieval = CookieArr[i];
-      withcash = cashArr[i];
-      $.index = i + 1;
-      await userInfo();
-      await $.wait(1000);
-      if ($.isNode()) {
-        if (process.env.BAIDU_TASK) {
-         taskON = process.env.BAIDU_TASK
-       }
-      } 
-      if (taskON == "true") {
-        $.desc = "";
-        await firstbox();
-        await TaskCenter();
-      }
+    console.log(`您共提供${CookieArr.length}个百度账号Cookie`)
+    for (let i = 0; i < CookieArr.length; i++) {
+        if (CookieArr[i]) {
+            cookieval = CookieArr[i];
+            $.index = i + 1;
+            await userInfo();
+            await $.wait(1000);
+            $.desc = "";
+            await firstbox();
+            await TaskCenter();
+        }
     }
-  }
 })()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
-  
+
 function confApi(api, body, RefererUrl) {
     return {
        url: 'https://haokan.baidu.com/activity/'+api,
